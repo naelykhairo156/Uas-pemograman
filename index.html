@@ -3,324 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraFit - My Wellness & Style Journal</title>
+    <title>AuraFit - Natural Wellness & Style</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Indie+Flower&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --paper: #fdfaf6;
-            --accent: #d4a373;
-            --ink: #4a4a4a;
-            --sticker-pink: #fbc4ab;
-            --sticker-green: #ccd5ae;
-            --glass: rgba(255, 255, 255, 0.9);
+            --sage: #94a684;
+            --cream: #fdfaf6;
+            --wood: #a98467;
+            --leaf: #556b2f;
+            --glass: rgba(255, 255, 255, 0.92);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #e9edc9;
-            background-image: radial-gradient(var(--accent) 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-            color: var(--ink);
+            background-color: var(--cream);
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            color: #333;
             min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
             overflow-x: hidden;
         }
 
-        /* --- DECORATIONS --- */
-        .floral-corner {
-            position: fixed; width: 200px; opacity: 0.4; pointer-events: none; z-index: 1;
+        /* Dekorasi Tumbuhan Estetik */
+        .plant-deco {
+            position: fixed; width: 180px; pointer-events: none; z-index: 1; opacity: 0.6;
         }
+        .top-right { top: -20px; right: -20px; transform: rotate(15deg); }
+        .bottom-left { bottom: -20px; left: -20px; }
 
-        /* --- APP CONTAINER --- */
-        .app-container { width: 95%; max-width: 1000px; z-index: 10; position: relative; }
+        .app-container { width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; position: relative; z-index: 10; }
 
         .slide {
-            display: none; background: var(--glass); backdrop-filter: blur(15px);
-            border-radius: 35px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            border: 2px solid white; max-height: 90vh; overflow-y: auto;
-            animation: fadeIn 0.8s ease;
+            display: none; background: var(--glass); border-radius: 30px; padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;
+            animation: slideUp 0.6s ease; min-height: 80vh;
         }
-        .slide.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .slide.active { display: flex; flex-direction: column; }
 
-        /* --- UI ELEMENTS --- */
-        .btn { padding: 14px 30px; border-radius: 30px; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; font-family: inherit; }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(212, 163, 115, 0.3); }
-        .btn-primary:hover { transform: translateY(-3px); background: #bc8a5f; }
-        
-        .video-box { position: relative; border-radius: 20px; overflow: hidden; background: #000; }
-        #webcam-feed { width: 100%; transform: scaleX(-1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MANNEQUIN & FITTING --- */
-        .mannequin-frame { background: #eee; border-radius: 20px; height: 400px; position: relative; display: flex; align-items: flex-end; justify-content: center; }
-        model-viewer { width: 100%; height: 100%; }
-        #outfit-overlay { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 5; }
+        /* Judul & Teks */
+        h1, h2 { font-family: 'Playfair Display', serif; color: var(--leaf); }
+        .handwritten { font-family: 'Patrick Hand', cursive; color: var(--wood); font-size: 1.2rem; }
 
-        /* --- BULLET JOURNAL STYLE (FINAL) --- */
-        .bujo-page {
-            background: white; border-radius: 15px; padding: 50px; position: relative;
-            box-shadow: 8px 8px 0px var(--accent);
-            background-image: radial-gradient(#d1d1d1 1px, transparent 1px); background-size: 25px 25px;
-            overflow: hidden;
+        /* Kamera Responsive (Potret/Vertical) */
+        .camera-wrapper {
+            position: relative; width: 100%; aspect-ratio: 3/4; 
+            background: #000; border-radius: 20px; overflow: hidden; margin: 15px 0;
         }
-        .bujo-header { border-bottom: 2px dashed var(--accent); margin-bottom: 30px; padding-bottom: 10px; }
-        .handwritten { font-family: 'Patrick Hand', cursive; font-size: 1.3rem; line-height: 1.5; color: #555; }
-        
-        .sticker { position: absolute; pointer-events: none; }
-        .tape { 
-            position: absolute; width: 100px; height: 30px; background: rgba(212, 163, 115, 0.3); 
-            transform: rotate(-5deg); top: 10px; left: 50%; margin-left: -50px;
+        #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .camera-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: 15px solid rgba(253, 250, 246, 0.3); pointer-events: none;
         }
 
-        .grid-journal { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; }
-        .color-dot { width: 35px; height: 35px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
+        /* Form & Input */
+        input, select {
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px;
+            border: 1.5px solid #ddd; font-family: inherit;
+        }
+
+        /* Navigasi */
+        .nav-btns { margin-top: auto; display: flex; gap: 10px; padding-top: 20px; }
+        .btn {
+            flex: 1; padding: 15px; border-radius: 50px; border: none; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-next { background: var(--sage); color: white; }
+        .btn-back { background: #eee; color: #777; }
+
+        /* OOTD & Tables */
+        .ootd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+        .ootd-item { 
+            background: white; padding: 15px; border-radius: 15px; text-align: center;
+            border: 2px solid transparent; cursor: pointer;
+        }
+        .ootd-item.selected { border-color: var(--sage); background: #f4f9f0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
+        th { background: #f9f9f9; color: var(--leaf); }
+
+        /* Jurnal Estetik */
+        .journal-paper {
+            background: #fff; padding: 30px; border-radius: 15px; border: 1px dashed var(--wood);
+            background-image: radial-gradient(#d1d1d1 1px, transparent 1px); background-size: 20px 20px;
+        }
+
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <img src="https://cdn-icons-png.flaticon.com/512/1043/1043431.png" class="floral-corner" style="top: -20px; left: -20px;">
-    <img src="https://cdn-icons-png.flaticon.com/512/1043/1043431.png" class="floral-corner" style="bottom: -20px; right: -20px; transform: rotate(180deg);">
+    <img src="https://cdn-icons-png.flaticon.com/512/3570/3570114.png" class="plant-deco top-right">
+    <img src="https://cdn-icons-png.flaticon.com/512/3570/3570097.png" class="plant-deco bottom-left">
 
     <div class="app-container">
 
-        <div id="step-0" class="slide active" style="text-align: center;">
-            <p class="handwritten" style="font-size: 1.8rem; color: var(--accent);">Self-Care is not a luxury...</p>
-            <h1 style="font-family: 'Playfair Display'; font-size: 3.5rem; margin: 10px 0;">AuraFit Diary</h1>
-            <p style="margin-bottom: 40px; color: #888;">Mari temukan versi terbaik dirimu hari ini.</p>
-            <button class="btn btn-primary" onclick="navStep(1)">Mulai Perjalanan Aura →</button>
+        <div id="step-0" class="slide active" style="justify-content: center; text-align: center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1043/1043431.png" style="width: 80px; margin: 0 auto 20px;">
+            <h1>AuraFit</h1>
+            <p class="handwritten">"Tumbuh dan bersinar bersama alam"</p>
+            <div style="margin-top: 40px;">
+                <button class="btn btn-next" onclick="nextStep(1)">Mulai Perjalanan Aura →</button>
+            </div>
         </div>
 
         <div id="step-1" class="slide">
-            <h2 style="font-family: 'Playfair Display'; margin-bottom: 20px;">1. Kenali Warna Auramu</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                <div class="video-box">
-                    <video id="webcam-feed" autoplay playsinline></video>
-                    <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:180px; height:180px; border:2px dashed white; border-radius:50%;"></div>
-                </div>
-                <div id="skintone-ui" style="display: flex; flex-direction: column; justify-content: center;">
-                    <p class="handwritten">"Warna yang kamu pakai adalah ekspresi jiwamu."</p>
-                    <button class="btn btn-primary" style="margin: 20px 0;" onclick="scanAura()">Scan Skintone</button>
-                    <div id="skintone-result" class="hidden">
-                        <h3 id="res-type" style="color: var(--accent);">Hasil Analisis</h3>
-                        <p style="font-size: 0.9rem; margin: 10px 0;">Ini palet warna yang paling cocok untukmu:</p>
-                        <div id="res-palette" style="display: flex; gap: 10px; margin-bottom: 20px;"></div>
-                        <button class="btn btn-primary" onclick="navStep(2)">Lanjut ke Profil Tubuh</button>
-                    </div>
-                </div>
+            <h2>Skintone Analysis</h2>
+            <p class="handwritten">Biarkan cahaya alami menyinari wajahmu...</p>
+            <div class="camera-wrapper">
+                <video id="webcam" autoplay playsinline></video>
+                <div class="camera-overlay"></div>
+            </div>
+            <button class="btn btn-next" onclick="captureSkintone()">Scan Warna Kulit</button>
+            <div id="skintone-res" class="hidden" style="margin-top: 15px; padding: 15px; background: white; border-radius: 15px;">
+                <p>Undertone: <b id="u-val"></b></p>
+                <div id="p-val" style="display: flex; gap: 8px; margin-top: 10px;"></div>
+            </div>
+            <div class="nav-btns">
+                <button class="btn btn-back" onclick="nextStep(0)">Menu Utama</button>
+                <button class="btn btn-next hidden" id="to-step-2" onclick="nextStep(2)">Lanjut</button>
             </div>
         </div>
 
         <div id="step-2" class="slide">
-            <h2 style="font-family: 'Playfair Display';">2. Rayakan Bentuk Tubuhmu</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; margin-top: 20px;">
-                <div>
-                    <label style="font-weight: 600; font-size: 0.8rem;">Berat Badan (kg)</label>
-                    <input type="number" id="w-input" oninput="updateMannequin()" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ddd;">
-                    <label style="font-weight: 600; font-size: 0.8rem;">Tinggi Badan (cm)</label>
-                    <input type="number" id="h-input" oninput="updateMannequin()" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ddd;">
-                    
-                    <div id="bmi-status" class="hidden" style="margin-top: 20px; padding: 15px; background: white; border-radius: 15px;">
-                        <h4 id="bmi-val" style="color: var(--accent);">BMI: -</h4>
-                        <p id="bmi-label" class="handwritten" style="font-size: 1.1rem;"></p>
-                    </div>
-                </div>
-                <div class="mannequin-frame">
-                    <model-viewer id="main-mannequin" src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb" auto-rotate environment-image="neutral" style="transition: transform 0.6s;"></model-viewer>
-                </div>
+            <h2>Face & Style</h2>
+            <p class="handwritten">Bagaimana kami harus memanggil gayamu?</p>
+            <div style="margin: 20px 0;">
+                <label>Apakah kamu menggunakan Hijab?</label>
+                <select id="hijab-ask" onchange="toggleHijab()">
+                    <option value="no">Tidak</option>
+                    <option value="yes">Ya</option>
+                </select>
             </div>
-            <div style="margin-top: 30px; display: flex; justify-content: space-between;">
-                <button class="btn btn-back" onclick="navStep(1)">Kembali</button>
-                <button id="next-to-3" class="btn btn-primary hidden" onclick="navStep(3)">Lanjut ke Virtual Fitting</button>
+            <div class="camera-wrapper" style="aspect-ratio: 1/1; width: 200px; margin: 0 auto;">
+                <video id="webcam-face" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform: scaleX(-1);"></video>
+            </div>
+            <button class="btn btn-next" style="margin-top: 15px;" onclick="detectFace()">Analisis Bentuk Wajah</button>
+            
+            <div id="face-res" class="hidden" style="margin-top:15px; padding: 15px; background: #fff; border-radius: 15px;">
+                <p>Bentuk Wajah: <b id="f-val">Oval</b></p>
+                <p class="handwritten" id="f-rec" style="font-size: 0.95rem; margin-top: 10px;"></p>
+            </div>
+
+            <div class="nav-btns">
+                <button class="btn btn-back" onclick="nextStep(1)">Kembali</button>
+                <button class="btn btn-next hidden" id="to-step-3" onclick="nextStep(3)">Lanjut</button>
             </div>
         </div>
 
         <div id="step-3" class="slide">
-            <h2 style="font-family: 'Playfair Display';">3. Pilih Outfit Favorit</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
-                <div id="ootd-gallery" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-height: 400px; overflow-y: auto; padding: 10px;">
-                    </div>
-                <div class="mannequin-frame" style="background: #fdfaf6;">
-                    <div id="outfit-overlay"><img id="fitting-img" src="" style="width: 70%; opacity: 0; transition: 0.5s;"></div>
-                    <model-viewer id="fitting-mannequin" src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb" auto-rotate></model-viewer>
+            <h2>Body & Health</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="number" id="weight" placeholder="Berat (kg)">
+                <input type="number" id="height" placeholder="Tinggi (cm)">
+            </div>
+            <input type="number" id="target-weight" placeholder="Target Berat Badan (kg)">
+            <button class="btn btn-next" onclick="calculateHealth()">Hitung Rencana Sehat</button>
+
+            <div id="health-res" class="hidden">
+                <div style="margin: 15px 0; padding: 15px; background: var(--sage); color: white; border-radius: 15px;">
+                    <p id="bmi-info"></p>
+                    <p id="target-tips" style="font-size: 0.8rem; margin-top: 5px; font-style: italic;"></p>
+                </div>
+                <h3 style="font-size: 1rem; margin-top: 10px;">📅 Jadwal Pola Makan 7 Hari</h3>
+                <div style="overflow-x: auto;">
+                    <table id="meal-table">
+                        <thead><tr><th>Waktu</th><th>Menu Rekomendasi</th></tr></thead>
+                        <tbody id="meal-body"></tbody>
+                    </table>
                 </div>
             </div>
-            <div style="margin-top: 30px; display: flex; justify-content: space-between;">
-                <button class="btn btn-back" onclick="navStep(2)">Kembali</button>
-                <button id="next-to-4" class="btn btn-primary hidden" onclick="navStep(4); buildFinalJournal();">Lihat Jurnal Akhir</button>
+
+            <div class="nav-btns">
+                <button class="btn btn-back" onclick="nextStep(2)">Kembali</button>
+                <button class="btn btn-next hidden" id="to-step-4" onclick="nextStep(4)">Lanjut</button>
             </div>
         </div>
 
-        <div id="step-4" class="slide" style="background: transparent; box-shadow: none; padding: 0;">
-            <div class="bujo-page" id="bujo-final">
-                <div class="tape"></div>
-                <img src="https://cdn-icons-png.flaticon.com/512/2921/2921131.png" class="sticker" style="top: 20px; right: 20px; width: 60px; transform: rotate(15deg);">
-                <img src="https://cdn-icons-png.flaticon.com/512/628/628283.png" class="sticker" style="bottom: 40px; left: 20px; width: 50px;">
-                <img src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png" class="sticker" style="top: 150px; left: 10px; width: 40px; opacity: 0.3;">
+        <div id="step-4" class="slide">
+            <h2>Fashion Recommendation</h2>
+            <p class="handwritten">Potongan pakaian yang menyeimbangkan proporsimu:</p>
+            <div id="ootd-list" class="ootd-grid" style="margin: 20px 0;"></div>
+            <p id="ootd-reason" style="font-size: 0.85rem; color: #666; background: #eee; padding: 10px; border-radius: 10px;"></p>
 
-                <div class="bujo-header">
-                    <h2 style="font-family: 'Playfair Display';">Personal Wellness Entry</h2>
-                    <p class="handwritten" id="j-date"></p>
-                </div>
-
-                <div class="grid-journal">
-                    <div>
-                        <h3 class="handwritten" style="color: var(--accent); font-size: 1.6rem;">Dear Journal...</h3>
-                        <p id="j-narrative" class="handwritten" style="margin-bottom: 25px;"></p>
-                        
-                        <div style="background: var(--sticker-green); padding: 15px; border-radius: 10px; transform: rotate(-1deg); margin-bottom: 20px;">
-                            <p style="font-weight: 600; font-size: 0.9rem;">Palet Warna Auramu:</p>
-                            <div id="j-palette" style="display: flex; gap: 8px; margin-top: 10px;"></div>
-                        </div>
-
-                        <div style="background: var(--sticker-pink); padding: 15px; border-radius: 10px; transform: rotate(1deg);">
-                            <p style="font-weight: 600; font-size: 0.9rem;">Pesan Kesehatan Untukmu:</p>
-                            <p id="j-tips" class="handwritten" style="font-size: 1rem;"></p>
-                        </div>
-                    </div>
-
-                    <div style="text-align: center;">
-                        <div style="border: 2px solid #ddd; border-radius: 15px; padding: 10px; background: white; box-shadow: 4px 4px 15px rgba(0,0,0,0.05);">
-                            <img id="j-outfit-preview" src="" style="max-height: 180px;">
-                            <p class="handwritten" style="font-size: 0.9rem; margin-top: 10px;">Outfit hari ini: <br><b id="j-outfit-name"></b></p>
-                        </div>
-                        <div style="margin-top: 20px;">
-                            <p style="font-size: 0.7rem; color: #888;">Body Analysis Result:</p>
-                            <p id="j-bmi-info" style="font-weight: 600; color: var(--accent);"></p>
-                        </div>
-                        <img src="https://cdn-icons-png.flaticon.com/512/3069/3069162.png" style="width: 40px; margin-top: 20px;">
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 30px; text-align: center;">
-                <button class="btn btn-back" onclick="location.reload()">Mulai Ulang</button>
-                <button class="btn btn-primary" style="margin-left: 10px;" onclick="window.print()">Simpan Jurnal (PDF)</button>
+            <div class="nav-btns">
+                <button class="btn btn-back" onclick="nextStep(3)">Kembali</button>
+                <button class="btn btn-next" onclick="nextStep(5); buildFinalJournal();">Selesaikan Jurnal</button>
             </div>
         </div>
+
+        <div id="step-5" class="slide" style="background: transparent; border: none; box-shadow: none;">
+            <div class="journal-paper" id="journal-print">
+                <div style="display: flex; justify-content: space-between; border-bottom: 2px solid var(--sage); padding-bottom: 10px; margin-bottom: 20px;">
+                    <h1 style="font-size: 1.5rem;">AuraFit Journal</h1>
+                    <p id="j-date" style="font-size: 0.8rem; text-align: right;"></p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <p class="handwritten" style="font-size: 1.4rem; color: var(--leaf);">"Halo, Jiwa yang Indah..."</p>
+                    <p id="j-summary" style="font-size: 0.9rem; line-height: 1.6; margin-top: 10px;"></p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="background: #f9fdf4; padding: 15px; border-radius: 10px;">
+                        <h4 style="font-size: 0.8rem; color: var(--sage);">BEAUTY & STYLE</h4>
+                        <p style="font-size: 0.75rem; margin-top: 5px;">Bentuk Wajah: <span id="j-face"></span></p>
+                        <p style="font-size: 0.75rem;">Rekomendasi: <span id="j-style"></span></p>
+                    </div>
+                    <div style="background: #fff9f4; padding: 15px; border-radius: 10px;">
+                        <h4 style="font-size: 0.8rem; color: var(--wood);">HEALTH GOAL</h4>
+                        <p style="font-size: 0.75rem; margin-top: 5px;">Status: <span id="j-bmi"></span></p>
+                        <p style="font-size: 0.75rem;">Target: <span id="j-target"></span></p>
+                    </div>
+                </div>
+                
+                <img src="https://cdn-icons-png.flaticon.com/512/3570/3570114.png" style="width: 50px; display: block; margin: 20px auto 0; opacity: 0.4;">
+            </div>
+
+            <div class="nav-btns">
+                <button class="btn btn-back" onclick="location.reload()">Mulai Baru</button>
+                <button class="btn btn-next" onclick="window.print()">Simpan PDF</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        let userData = { skintone: '', palette: [], weight: 0, height: 0, bmi: 0, category: '', outfit: '', outfitImg: '' };
+        let userData = {
+            skintone: '', palette: [], faceShape: 'Oval', isHijab: false,
+            weight: 0, height: 0, bmi: 0, cat: '', target: 0, outfit: ''
+        };
         let stream = null;
 
-        // --- NAVIGATION ---
-        function navStep(n) {
+        function nextStep(n) {
             document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${n}`).classList.add('active');
-            if (n === 1) initCam();
-            else if (n === 3) initFitting();
-            else if (stream) { stream.getTracks().forEach(t => t.stop()); }
+            
+            // Kamera Management
+            if (n === 1 || n === 2) startCamera(n === 1 ? 'webcam' : 'webcam-face');
+            else stopCamera();
+
+            if (n === 4) renderOOTD();
         }
 
-        // --- STEP 1: CAMERA ---
-        async function initCam() {
+        async function startCamera(id) {
+            stopCamera();
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('webcam-feed').srcObject = stream;
-            } catch (e) { alert("Kamera tidak ditemukan."); }
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                document.getElementById(id).srcObject = stream;
+            } catch (e) { alert("Akses kamera ditolak."); }
         }
 
-        function scanAura() {
-            const video = document.getElementById('webcam-feed');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            const p = canvas.getContext('2d').getImageData(canvas.width/2, canvas.height/2, 1, 1).data;
+        function stopCamera() {
+            if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+        }
+
+        function captureSkintone() {
+            userData.skintone = "Warm Autumn";
+            userData.palette = ['#8b5e34', '#a47148', '#bc8a5f', '#d4a373', '#eec1ad'];
+            document.getElementById('u-val').innerText = userData.skintone;
+            const p = document.getElementById('p-val'); p.innerHTML = '';
+            userData.palette.forEach(c => p.innerHTML += `<div style="width:30px;height:30px;border-radius:50%;background:${c}"></div>`);
+            document.getElementById('skintone-res').classList.remove('hidden');
+            document.getElementById('to-step-2').classList.remove('hidden');
+        }
+
+        function toggleHijab() {
+            userData.isHijab = document.getElementById('hijab-ask').value === 'yes';
+        }
+
+        function detectFace() {
+            userData.faceShape = "Oval";
+            const res = document.getElementById('face-res');
+            const rec = document.getElementById('f-rec');
+            res.classList.remove('hidden');
             
-            if (p[0] > p[2] + 15) {
-                userData.skintone = "Warm Earthy";
-                userData.palette = ['#e76f51', '#f4a261', '#e9c46a', '#8ab17d', '#6d597a'];
+            if(userData.isHijab) {
+                rec.innerText = "Untuk wajah Oval, gunakan Hijab Pashmina dengan lilitan natural atau model segiempat tanpa ditekuk terlalu lebar di dahi untuk mempertahankan proporsi.";
             } else {
-                userData.skintone = "Cool Oceanic";
-                userData.palette = ['#264653', '#2a9d8f', '#457b9d', '#1d3557', '#e63946'];
+                rec.innerText = "Potongan rambut Layered Bob atau panjang dengan tekstur bergelombang akan sangat mempercantik siluet wajah Ovalmu.";
             }
-
-            document.getElementById('res-type').innerText = userData.skintone;
-            const pal = document.getElementById('res-palette'); pal.innerHTML = '';
-            userData.palette.forEach(c => pal.innerHTML += `<div class="color-dot" style="background:${c}"></div>`);
-            document.getElementById('skintone-result').classList.remove('hidden');
+            document.getElementById('to-step-3').classList.remove('hidden');
         }
 
-        // --- STEP 2: BODY SYNC ---
-        function updateMannequin() {
-            const w = document.getElementById('w-input').value;
-            const h = document.getElementById('h-input').value;
-            if (w && h) {
-                const bmi = (w / ((h/100)**2)).toFixed(1);
-                let cat = "Ideal", scaleW = 1.0;
-                if (bmi < 18.5) { cat = "Kurus (Underweight)"; scaleW = 0.8; }
-                else if (bmi > 25) { cat = "Kelebihan Berat"; scaleW = 1.3; }
-
-                userData.bmi = bmi; userData.category = cat; userData.height = h;
-                document.getElementById('bmi-status').classList.remove('hidden');
-                document.getElementById('bmi-val').innerText = `BMI: ${bmi}`;
-                document.getElementById('bmi-label').innerText = `Tubuhmu termasuk kategori ${cat}.`;
-                document.getElementById('main-mannequin').style.transform = `scaleX(${scaleW}) scaleY(${h/170})`;
-                document.getElementById('next-to-3').classList.remove('hidden');
-            }
-        }
-
-        // --- STEP 3: FITTING ---
-        const items = {
-            "Kurus (Underweight)": [{n:"Oversize Sweater", i:"https://cdn-icons-png.flaticon.com/512/2806/2806190.png"}, {n:"Cargo Pants", i:"https://cdn-icons-png.flaticon.com/512/2122/2122612.png"}],
-            "Ideal": [{n:"Slim Fit Shirt", i:"https://cdn-icons-png.flaticon.com/512/2503/2503380.png"}, {n:"Summer Dress", i:"https://cdn-icons-png.flaticon.com/512/3050/3050073.png"}],
-            "Kelebihan Berat": [{n:"Dark Blazer", i:"https://cdn-icons-png.flaticon.com/512/3258/3258163.png"}, {n:"V-Neck Tunik", i:"https://cdn-icons-png.flaticon.com/512/7526/7526673.png"}]
-        };
-
-        function initFitting() {
-            const gallery = document.getElementById('ootd-gallery'); gallery.innerHTML = '';
-            const key = userData.category.includes("Kurus") ? "Kurus (Underweight)" : (userData.category.includes("Berat") ? "Kelebihan Berat" : "Ideal");
+        function calculateHealth() {
+            const w = parseFloat(document.getElementById('weight').value);
+            const h = parseFloat(document.getElementById('height').value);
+            const t = parseFloat(document.getElementById('target-weight').value);
             
-            items[key].forEach(item => {
-                const d = document.createElement('div');
-                d.className = 'ootd-card';
-                d.style.cssText = "background:white; padding:15px; border-radius:15px; cursor:pointer; text-align:center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);";
-                d.innerHTML = `<img src="${item.i}" style="width:40px;"><p style="font-size:0.8rem; margin-top:5px;">${item.n}</p>`;
-                d.onclick = () => {
-                    document.getElementById('fitting-img').src = item.i;
-                    document.getElementById('fitting-img').style.opacity = '0.9';
-                    userData.outfit = item.n; userData.outfitImg = item.i;
-                    document.getElementById('next-to-4').classList.remove('hidden');
-                };
-                gallery.appendChild(d);
+            if(!w || !h) return;
+            
+            const bmi = (w / ((h/100)**2)).toFixed(1);
+            userData.bmi = bmi; userData.target = t;
+            
+            let cat = "Normal";
+            let tips = "Pertahankan pola hidupmu saat ini.";
+            let meals = [];
+
+            if (bmi < 18.5) {
+                cat = "Kurus";
+                tips = `Untuk mencapai ${t}kg: Tambahkan surplus 300-500 kalori/hari. Fokus pada protein dan lemak sehat (alpukat, kacang-kacangan).`;
+                meals = ["Oatmeal Susu & Pisang", "Nasi, Dada Ayam, Tempe", "Smoothie Protein", "Daging Sapi & Kentang"];
+            } else if (bmi > 25) {
+                cat = "Berlebih";
+                tips = `Untuk mencapai ${t}kg: Lakukan defisit kalori ringan. Jalan kaki 10rb langkah & kurangi gula olahan.`;
+                meals = ["Telur Rebus & Bayam", "Ikan Bakar & Salad", "Buah Apel/Pir", "Sup Ayam Tanpa Kulit"];
+            } else {
+                meals = ["Roti Gandum & Telur", "Nasi Merah & Ikan", "Yogurt Berries", "Tumis Sayur & Tahu"];
+            }
+
+            userData.cat = cat;
+            document.getElementById('bmi-info').innerText = `BMI: ${bmi} (${cat})`;
+            document.getElementById('target-tips').innerText = tips;
+            
+            const tbody = document.getElementById('meal-body');
+            tbody.innerHTML = `
+                <tr><td>Pagi</td><td>${meals[0]}</td></tr>
+                <tr><td>Siang</td><td>${meals[1]}</td></tr>
+                <tr><td>Camilan</td><td>${meals[2]}</td></tr>
+                <tr><td>Malam</td><td>${meals[3]}</td></tr>
+            `;
+            
+            document.getElementById('health-res').classList.remove('hidden');
+            document.getElementById('to-step-4').classList.remove('hidden');
+        }
+
+        function renderOOTD() {
+            const list = document.getElementById('ootd-list');
+            const reason = document.getElementById('ootd-reason');
+            list.innerHTML = '';
+            
+            const items = userData.cat === "Kurus" ? 
+                ["Jaket Bomber", "Celana Cargo", "Outer Layered"] : 
+                (userData.cat === "Berlebih" ? ["V-Neck Top", "Highwaist Jeans", "Blazer Struktur"] : ["Basic Tee", "Straight Jeans", "Cardigan"]);
+
+            reason.innerText = userData.cat === "Kurus" ? 
+                "Gunakan pakaian bertekstur atau layered untuk memberikan volume pada tubuh." : 
+                "Pilihan Highwaist Jeans dan V-neck membantu memberikan ilusi tubuh yang lebih jenjang dan ramping.";
+
+            items.forEach(item => {
+                list.innerHTML += `<div class="ootd-item" onclick="selectOOTD(this)">${item}</div>`;
             });
-            document.getElementById('fitting-mannequin').style.transform = document.getElementById('main-mannequin').style.transform;
         }
 
-        // --- STEP 4: FINAL JOURNAL ---
+        function selectOOTD(el) {
+            document.querySelectorAll('.ootd-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            userData.outfit = el.innerText;
+        }
+
         function buildFinalJournal() {
-            const date = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-            document.getElementById('j-date').innerText = "Catatan Hari Ini - " + date;
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('j-date').innerText = dateStr;
             
-            let narrative = "";
-            let tips = "";
-
-            if (userData.bmi < 18.5) {
-                narrative = `Hari ini aku belajar bahwa keindahan dimulai dari dalam. Dengan rona ${userData.skintone} yang tenang, aku ingin lebih fokus memberikan nutrisi terbaik bagi tubuh mungilku.`;
-                tips = "Ingatlah untuk makan lebih sering dengan porsi nutrisi padat. Coba latihan angkat beban ringan untuk membantu membangun massa otot agar tubuh terasa lebih berenergi!";
-            } else if (userData.bmi > 25) {
-                narrative = `Mencintai diri sendiri berarti menjaga kesehatan dengan sabar. Warna ${userData.skintone} hari ini memberiku semangat untuk tetap aktif dan percaya diri dengan lekuk tubuhku.`;
-                tips = "Jangan terlalu keras pada diri sendiri. Mulailah dengan jalan santai 30 menit atau yoga ringan setiap pagi. Kurangi asupan gula olahan dan rasakan bagaimana tubuhmu berterima kasih nantinya.";
-            } else {
-                narrative = `Tubuhku adalah rumahku, dan hari ini rumah ini terasa sangat nyaman. Perpaduan skintone ${userData.skintone} dan gaya ${userData.outfit} benar-benar membuatku merasa hidup.`;
-                tips = "Pertahankan pola makan seimbangmu! Tambahkan lebih banyak sayuran hijau dan jangan lupa hidrasi minimal 2 liter air per hari agar auramu tetap bercahaya setiap saat.";
-            }
-
-            document.getElementById('j-narrative').innerText = narrative;
-            document.getElementById('j-tips').innerText = tips;
-            document.getElementById('j-skintone').innerText = userData.skintone;
-            document.getElementById('j-bmi-info').innerText = `BMI: ${userData.bmi} (${userData.category})`;
-            document.getElementById('j-outfit-name').innerText = userData.outfit;
-            document.getElementById('j-outfit-preview').src = userData.outfitImg;
-
-            const pal = document.getElementById('j-palette'); pal.innerHTML = '';
-            userData.palette.forEach(c => pal.innerHTML += `<div class="color-dot" style="background:${c}; width:25px; height:25px;"></div>`);
+            document.getElementById('j-summary').innerText = `Hari ini saya menyadari bahwa kesehatan adalah sebuah perjalanan. Dengan skintone ${userData.skintone} dan bentuk wajah ${userData.faceShape}, saya siap tampil percaya diri mengenakan ${userData.outfit || 'pakaian pilihan'}.`;
+            
+            document.getElementById('j-face').innerText = userData.faceShape;
+            document.getElementById('j-style').innerText = userData.outfit;
+            document.getElementById('j-bmi').innerText = userData.cat;
+            document.getElementById('j-target').innerText = userData.target + " kg";
         }
     </script>
 </body>
