@@ -5,7 +5,6 @@
   <title>AuraFit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -14,16 +13,21 @@
   <!-- DASHBOARD -->
   <section id="dashboard">
     <h1>🌸 AuraFit</h1>
-    <p class="tagline">Personalized beauty & style, just for you</p>
+    <p>Personalized beauty & health advisor</p>
     <button onclick="goTo('skintone')">Mulai</button>
   </section>
 
   <!-- SKINTONE -->
   <section id="skintone">
     <h2>Skintone Scanner</h2>
-    <p>Simulasi pemindaian kamera...</p>
-    <button onclick="scanSkintone()">Scan Sekarang</button>
-    <div id="skintoneResult"></div>
+
+    <video id="skinVideo" autoplay playsinline></video>
+    <canvas id="skinCanvas"></canvas>
+
+    <button onclick="takeSkinPhoto()">Ambil Foto</button>
+    <p id="skinResult"></p>
+    <p class="error" id="skinError"></p>
+
     <div class="nav">
       <button onclick="goTo('dashboard')">Kembali</button>
       <button onclick="goTo('face')">Selanjutnya</button>
@@ -33,12 +37,19 @@
   <!-- FACE -->
   <section id="face">
     <h2>Face Framing</h2>
-    <button onclick="scanFace()">Scan Wajah</button>
+
+    <video id="faceVideo" autoplay playsinline></video>
+    <canvas id="faceCanvas"></canvas>
+
+    <button onclick="takeFacePhoto()">Ambil Foto</button>
     <p id="faceResult"></p>
+    <p class="error" id="faceError"></p>
+
     <div class="image-row">
       <img id="hijabImg">
       <img id="hairImg">
     </div>
+
     <div class="nav">
       <button onclick="goTo('skintone')">Kembali</button>
       <button onclick="goTo('bmi')">Selanjutnya</button>
@@ -48,11 +59,13 @@
   <!-- BMI -->
   <section id="bmi">
     <h2>BMI & Health</h2>
-    <input type="number" id="bb" placeholder="Berat Badan (kg)">
-    <input type="number" id="tb" placeholder="Tinggi Badan (cm)">
+
+    <input id="bb" type="number" placeholder="Berat Badan (kg)">
+    <input id="tb" type="number" placeholder="Tinggi Badan (cm)">
     <button onclick="hitungBMI()">Hitung BMI</button>
-    <div id="bmiResult"></div>
-    <div id="mealTable"></div>
+
+    <p id="bmiResult"></p>
+
     <div class="nav">
       <button onclick="goTo('face')">Kembali</button>
       <button onclick="goTo('ootd')">Selanjutnya</button>
@@ -61,12 +74,13 @@
 
   <!-- OOTD -->
   <section id="ootd">
-    <h2>OOTD Advisor</h2>
+    <h2>OOTD Advisor 👩</h2>
     <p>ini rekomendasi outfit yang cocok untuk mu 💕</p>
     <img id="ootdImg">
+
     <div class="nav">
       <button onclick="goTo('bmi')">Kembali</button>
-      <button onclick="goTo('journal')">Lihat Jurnal</button>
+      <button onclick="goTo('journal')">Jurnal</button>
     </div>
   </section>
 
@@ -75,20 +89,14 @@
     <h2>🌷 AuraFit Journal</h2>
     <p id="date"></p>
 
-    <div class="journal-box">
-      <p><strong>Skintone:</strong> <span id="jSkintone"></span></p>
-      <p><strong>Bentuk Wajah:</strong> <span id="jFace"></span></p>
+    <p><strong>Skintone:</strong> <span id="jSkin"></span></p>
+    <p><strong>Bentuk Wajah:</strong> <span id="jFace"></span></p>
 
-      <div class="image-row">
-        <img id="jHijab">
-        <img id="jHair">
-      </div>
+    <img id="jHijab">
+    <img id="jHair">
 
-      <p><strong>BMI:</strong> <span id="jBMI"></span></p>
-      <div id="jMeal"></div>
-
-      <img id="jOOTD">
-    </div>
+    <p><strong>BMI:</strong> <span id="jBMI"></span></p>
+    <img id="jOOTD">
   </section>
 
 </div>
