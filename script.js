@@ -1,25 +1,24 @@
-let currentStep = 0;
-const steps = document.querySelectorAll('.step');
-
 let skintone = '';
 let face = '';
 let bmiValue = '';
 let bmiCategory = '';
 
-function showStep() {
-  steps.forEach((s, i) => {
-    s.classList.toggle('active', i === currentStep);
+const sections = [
+  'dashboard',
+  'skintone',
+  'face',
+  'bmi',
+  'ootd',
+  'journal'
+];
+
+function goTo(id) {
+  sections.forEach(sec => {
+    document.getElementById(sec).style.display = 'none';
   });
-}
+  document.getElementById(id).style.display = 'block';
 
-function nextStep() {
-  if (currentStep < steps.length - 1) currentStep++;
-  showStep();
-}
-
-function prevStep() {
-  if (currentStep > 0) currentStep--;
-  showStep();
+  if (id === 'journal') updateJournal();
 }
 
 /* SKINTONE */
@@ -34,9 +33,8 @@ function scanSkintone() {
 function scanFace() {
   const faces = ['oval', 'bulat', 'kotak', 'hati', 'panjang'];
   face = faces[Math.floor(Math.random() * faces.length)];
-
-  document.getElementById('faceResult').innerHTML =
-    `<p>Bentuk wajah kamu: <strong>${face}</strong></p>`;
+  document.getElementById('faceResult').innerText =
+    `Bentuk wajah kamu: ${face}`;
 
   document.getElementById('hijabImg').src = `./assets/hijab-${face}.jpg`;
   document.getElementById('hairImg').src = `./assets/rambut-${face}.jpg`;
@@ -65,8 +63,6 @@ function hitungBMI() {
 
   document.getElementById('ootdImg').src =
     `./assets/ootd-${bmiCategory}.jpg`;
-
-  updateJournal();
 }
 
 /* JOURNAL */
@@ -84,5 +80,10 @@ function updateJournal() {
 
   const now = new Date();
   document.getElementById('date').innerText =
-    now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    now.toLocaleDateString('id-ID', {
+      weekday:'long',
+      day:'numeric',
+      month:'long',
+      year:'numeric'
+    });
 }
