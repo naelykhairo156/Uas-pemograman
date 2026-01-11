@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>AuraFit | Personalized Beauty & Health</title>
+  <title>AuraFit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -12,42 +12,41 @@
 <div class="container">
 
   <!-- DASHBOARD -->
-  <section class="step active">
+  <section id="dashboard">
     <h1>🌸 AuraFit</h1>
     <p class="tagline">Personalized beauty & style, just for you</p>
-    <button onclick="nextStep()">Mulai</button>
+    <button onclick="goTo('skintone')">Mulai</button>
   </section>
 
   <!-- SKINTONE -->
-  <section class="step">
+  <section id="skintone">
     <h2>Skintone Scanner</h2>
     <p>Simulasi pemindaian kamera...</p>
     <button onclick="scanSkintone()">Scan Sekarang</button>
     <div id="skintoneResult"></div>
     <div class="nav">
-      <button onclick="prevStep()">Kembali</button>
-      <button onclick="nextStep()">Selanjutnya</button>
+      <button onclick="goTo('dashboard')">Kembali</button>
+      <button onclick="goTo('face')">Selanjutnya</button>
     </div>
   </section>
 
-  <!-- FACE FRAMING -->
-  <section class="step">
-    <h2>Face Framing Analysis</h2>
-    <p>Memindai bentuk wajah...</p>
+  <!-- FACE -->
+  <section id="face">
+    <h2>Face Framing</h2>
     <button onclick="scanFace()">Scan Wajah</button>
-    <div id="faceResult"></div>
+    <p id="faceResult"></p>
     <div class="image-row">
       <img id="hijabImg">
       <img id="hairImg">
     </div>
     <div class="nav">
-      <button onclick="prevStep()">Kembali</button>
-      <button onclick="nextStep()">Selanjutnya</button>
+      <button onclick="goTo('skintone')">Kembali</button>
+      <button onclick="goTo('bmi')">Selanjutnya</button>
     </div>
   </section>
 
   <!-- BMI -->
-  <section class="step">
+  <section id="bmi">
     <h2>BMI & Health</h2>
     <input type="number" id="bb" placeholder="Berat Badan (kg)">
     <input type="number" id="tb" placeholder="Tinggi Badan (cm)">
@@ -55,24 +54,24 @@
     <div id="bmiResult"></div>
     <div id="mealTable"></div>
     <div class="nav">
-      <button onclick="prevStep()">Kembali</button>
-      <button onclick="nextStep()">Selanjutnya</button>
+      <button onclick="goTo('face')">Kembali</button>
+      <button onclick="goTo('ootd')">Selanjutnya</button>
     </div>
   </section>
 
   <!-- OOTD -->
-  <section class="step">
+  <section id="ootd">
     <h2>OOTD Advisor</h2>
     <p>ini rekomendasi outfit yang cocok untuk mu 💕</p>
     <img id="ootdImg">
     <div class="nav">
-      <button onclick="prevStep()">Kembali</button>
-      <button onclick="nextStep()">Lihat Jurnal</button>
+      <button onclick="goTo('bmi')">Kembali</button>
+      <button onclick="goTo('journal')">Lihat Jurnal</button>
     </div>
   </section>
 
-  <!-- JURNAL -->
-  <section class="step journal">
+  <!-- JOURNAL -->
+  <section id="journal">
     <h2>🌷 AuraFit Journal</h2>
     <p id="date"></p>
 
