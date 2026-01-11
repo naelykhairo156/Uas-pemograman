@@ -3,356 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraFit - Your Ultimate Wellness Journal</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Patrick+Hand&display=swap" rel="stylesheet">
-    
+    <title>AuraFit - Personalized Beauty & Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #94a684;
-            --accent: #d4a3a3;
-            --bg-gradient: linear-gradient(135deg, #fdfaf6 0%, #f4eee0 100%);
-            --glass: rgba(255, 255, 255, 0.95);
-            --text: #3a3a3a;
+            --primary-dark: #839473;
+            --soft-pink: #FADBD8;
+            --soft-blue: #D6EAF8;
+            --soft-green: #B2D8B2;
+            --soft-yellow: #F9E79F;
+            --bg-creme: #fdfaf6;
+            --text-dark: #4a5d3f;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text);
-            min-height: 100vh;
+        * { margin: 0; padding: 0; box-space: border-box; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-creme); 
+            color: #333; 
+            overflow-x: hidden;
         }
 
-        /* Container Layout Control */
-        .app-container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+        /* --- ANIMASI GLOBAL --- */
+        @keyframes breeze {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(10px, -15px) rotate(3deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* --- NAVIGATION SYSTEM --- */
         .slide {
             display: none;
-            background: var(--glass);
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.05);
-            min-height: 85vh;
-            animation: slideIn 0.6s ease;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            padding: 40px 20px;
+            box-sizing: border-box;
             flex-direction: column;
+            align-items: center;
         }
         .slide.active { display: flex; }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Typography */
-        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--primary); }
-        .handwritten { font-family: 'Patrick Hand', cursive; }
-
-        /* Camera Proportional */
-        .cam-box {
-            width: 100%;
-            max-width: 350px;
-            aspect-ratio: 3/4;
-            margin: 20px auto;
-            background: #000;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            border: 5px solid #fff;
+        /* --- DECORATION SYSTEM --- */
+        .decor-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
-        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-
-        /* Grids */
-        .grid-rec { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 10px 0; }
-        .grid-ootd { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .flower-svg { position: absolute; width: 180px; height: 180px; opacity: 0.7; }
         
-        .card { background: white; border-radius: 12px; border: 1px solid #eee; overflow: hidden; font-size: 0.75rem; }
-        .card img { width: 100%; height: 120px; object-fit: cover; }
-        .card-body { padding: 8px; }
+        /* --- DASHBOARD (STEP 0) --- */
+        .hero-content { text-align: center; margin-top: 15vh; z-index: 10; }
+        .main-title { font-family: 'Playfair Display', serif; font-size: 4.5rem; color: var(--text-dark); }
+        .main-slogan { font-size: 1.2rem; color: #888; margin-bottom: 50px; }
 
-        /* Navigation */
-        .nav-footer { margin-top: auto; display: flex; justify-content: space-between; padding-top: 30px; }
-        .btn { padding: 12px 28px; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .btn-next { background: var(--primary); color: white; }
-        .btn-back { background: #eee; color: #777; }
-        .btn-small { padding: 8px 20px; font-size: 0.8rem; }
+        /* --- ANALYZER COMPONENTS --- */
+        .cam-container {
+            width: 300px; height: 300px; border-radius: 50%;
+            overflow: hidden; border: 8px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: #000; position: relative; margin: 20px 0;
+        }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .btn-aura {
+            background: var(--primary); color: white; border: none;
+            padding: 15px 40px; border-radius: 50px; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-aura:hover { transform: translateY(-3px); background: var(--primary-dark); }
 
-        /* Jurnal Estetik */
+        /* --- JURNAL (STEP 5) --- */
         .journal-paper {
-            background: #fff;
-            padding: 50px;
-            border-radius: 5px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
-            border-left: 15px solid var(--primary);
-            position: relative;
-            max-width: 900px;
-            margin: 0 auto;
+            background: white; width: 100%; max-width: 800px;
+            padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);
         }
-        .journal-paper::before {
-            content: ""; position: absolute; top: 0; left: 30px; bottom: 0; width: 1px; background: #ffebeb;
+        .j-section { margin-top: 30px; border-top: 1px solid #f0f0f0; padding-top: 20px; }
+        .j-section h4 { display: flex; align-items: center; color: var(--text-dark); margin-bottom: 15px; }
+        .j-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .j-card { border-radius: 10px; overflow: hidden; background: #fafafa; font-size: 0.8rem; }
+        .j-card img { width: 100%; height: 150px; object-fit: cover; }
+
+        /* --- RESPONSIVE POSITIONS --- */
+        @media (max-width: 768px) {
+            .main-title { font-size: 3rem; }
+            .flower-svg { width: 120px; height: 120px; }
+            /* Mobile positions: vertical spread */
+            .p-tl { top: 5%; left: -20px; }
+            .p-tr { top: 30%; right: -20px; }
+            .p-bl { top: 60%; left: -20px; }
+            .p-br { top: 85%; right: -20px; }
         }
-        .j-section { margin-bottom: 30px; border-bottom: 1px dashed #ddd; padding-bottom: 15px; }
-        .j-icon { width: 25px; margin-right: 10px; vertical-align: middle; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; }
-        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
-        th { background: #f9f9f9; color: var(--primary); }
-
-        .hidden { display: none; }
+        @media (min-width: 769px) {
+            /* Desktop positions: corner framing */
+            .p-tl { top: 30px; left: 30px; }
+            .p-tr { top: 30px; right: 30px; }
+            .p-bl { bottom: 30px; left: 30px; }
+            .p-br { bottom: 30px; right: 30px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-
-        <div id="step-0" class="slide active" style="text-align: center; justify-content: center;">
-            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
-                <h1 style="font-size: 3.5rem;">AuraFit</h1>
-                <p style="letter-spacing: 2px; color: #888;">Personalized beauty & style, just for you</p>
-                <div style="margin: 40px auto; width: 200px; opacity: 0.8;">
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#D4A3A3" d="M47,-62.1C58.7,-53.4,64.4,-37.2,67.6,-21.5C70.8,-5.8,71.5,9.4,66.4,22.8C61.3,36.2,50.3,47.8,37.6,56.5C24.8,65.2,10.4,71.1,-4.2,76.8C-18.7,82.5,-33.4,88.1,-45.8,82.6C-58.1,77.1,-68.2,60.5,-73.4,43.6C-78.7,26.7,-79.1,9.4,-75.4,-6.1C-71.7,-21.7,-63.9,-35.6,-52.7,-44.7C-41.5,-53.9,-26.8,-58.4,-11.5,-64.7C3.8,-71,25.3,-79.1,47,-62.1Z" transform="translate(100 100)" />
-                        <image href="https://cdn-icons-png.flaticon.com/512/2664/2664531.png" x="50" y="50" width="100" />
-                    </svg>
-                </div>
-                <button class="btn btn-next" style="margin: 0 auto;" onclick="nav(1)">Mulai Perjalanan Aura</button>
-            </div>
+    <div class="decor-layer" id="global-decor">
+        <div class="flower-svg p-tl" style="animation: breeze 10s infinite;">
+            <svg viewBox="0 0 100 100" fill="none" stroke="#AED6F1" stroke-width="1.5">
+                <path d="M50 50 Q70 10 90 50 T50 90 T10 50 T50 10" />
+            </svg>
         </div>
-
-        <div id="step-1" class="slide">
-            <h2>Skintone Analysis</h2>
-            <div class="cam-box"><video id="v-skin" autoplay playsinline></video></div>
-            <button class="btn btn-next" style="margin: 0 auto;" onclick="scanSkin()">Analyze Skintone</button>
-            <div id="res-skin" class="hidden" style="text-align: center; margin-top: 20px;">
-                <p>Aura Anda: <b id="skin-type-val" class="handwritten" style="font-size: 1.5rem;">Warm Autumn</b></p>
-                <p style="font-size: 0.9rem; margin-top: 10px;">Ini warna yang cocok sesuai skintone mu:</p>
-                <div id="pal-skin" style="display: flex; gap: 8px; justify-content: center; margin-top: 10px;"></div>
-            </div>
-            <div class="nav-footer">
-                <button class="btn btn-back" onclick="nav(0)">Kembali</button>
-                <button class="btn btn-next" onclick="nav(2)">Selanjutnya</button>
-            </div>
+        <div class="flower-svg p-tr" style="animation: breeze 12s infinite reverse;">
+            <svg viewBox="0 0 100 100" fill="none" stroke="#B2D8B2" stroke-width="1.5">
+                <path d="M20 80 Q40 40 80 20 M20 80 Q60 70 80 20" />
+            </svg>
         </div>
-
-        <div id="step-2" class="slide">
-            <h2>Face Framing</h2>
-            <div class="cam-box"><video id="v-face" autoplay playsinline></video></div>
-            <button class="btn btn-next" style="margin: 0 auto;" onclick="scanFace()">Detect Face Shape</button>
-            <div id="res-face" class="hidden" style="margin-top: 20px;">
-                <p style="text-align: center;">Bentuk Wajah: <b id="face-type-val">Oval</b></p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-                    <div><h4 style="font-size: 0.8rem;">3 Rekomendasi Hijab</h4><div id="h-recs" class="grid-rec"></div></div>
-                    <div><h4 style="font-size: 0.8rem;">3 Rekomendasi Rambut</h4><div id="r-recs" class="grid-rec"></div></div>
-                </div>
-            </div>
-            <div class="nav-footer">
-                <button class="btn btn-back" onclick="nav(1)">Kembali</button>
-                <button class="btn btn-next" onclick="nav(3)">Selanjutnya</button>
-            </div>
+        <div class="flower-svg p-bl" style="animation: breeze 8s infinite;">
+            <svg viewBox="0 0 100 100" fill="none" stroke="#FADBD8" stroke-width="1.5">
+                <circle cx="50" cy="50" r="10" />
+                <path d="M50 40 Q60 20 80 40 T50 60 T20 40 T50 40" />
+            </svg>
         </div>
-
-        <div id="step-3" class="slide">
-            <h2>Body & Meal Plan</h2>
-            <div style="display: flex; gap: 15px; justify-content: center; margin: 20px 0;">
-                <input type="number" id="w" placeholder="Berat (kg)" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 120px;">
-                <input type="number" id="h" placeholder="Tinggi (cm)" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 120px;">
-                <button class="btn btn-next btn-small" onclick="calcBMI()">Hitung</button>
-            </div>
-            <div id="res-bmi" class="hidden">
-                <div style="background: #fdfaf6; padding: 15px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary);">
-                    <p id="bmi-status-text"></p>
-                    <p id="bmi-exercise" style="font-size: 0.8rem; margin-top: 5px; color: #666;"></p>
-                </div>
-                <h4 style="font-size: 0.9rem;">Jadwal Makan Seminggu (4x Makan/Hari)</h4>
-                <div style="max-height: 250px; overflow-y: auto;">
-                    <table><thead><tr><th>Waktu</th><th>Rekomendasi Menu Matang</th></tr></thead><tbody id="meal-table"></tbody></table>
-                </div>
-            </div>
-            <div class="nav-footer">
-                <button class="btn btn-back" onclick="nav(2)">Kembali</button>
-                <button class="btn btn-next" onclick="nav(4)">Selanjutnya</button>
-            </div>
+        <div class="flower-svg p-br" style="animation: pulse 5s infinite;">
+            <svg viewBox="0 0 100 100" fill="none" stroke="#F9E79F" stroke-width="2">
+                <circle cx="50" cy="50" r="15" />
+                <path d="M50 10 L50 25 M85 50 L70 50 M50 90 L50 75 M15 50 L30 50" stroke-linecap="round"/>
+            </svg>
         </div>
+    </div>
 
-        <div id="step-4" class="slide">
-            <h2>Modest Style</h2>
-            <p class="handwritten" style="font-size: 1.5rem; text-align: center; color: var(--accent); margin-bottom: 20px;">"ini rekomendasi outfit yang cocok untuk mu 💕"</p>
-            <div id="ootd-list" class="grid-ootd"></div>
-            <div class="nav-footer">
-                <button class="btn btn-back" onclick="nav(3)">Kembali</button>
-                <button class="btn btn-next" onclick="nav(5); buildJournal();">Final Jurnal</button>
-            </div>
+    <div id="step-0" class="slide active">
+        <div class="hero-content">
+            <h1 class="main-title">AuraFit</h1>
+            <p class="main-slogan">Personalized beauty & style, just for you</p>
+            <button class="btn-aura" onclick="nextStep(1)">Mulai Perjalanan Aura</button>
         </div>
+    </div>
 
-        <div id="step-5" class="slide" style="background:transparent; padding:0; box-shadow:none;">
-            <div class="journal-paper" id="printable-journal">
-                <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                    <h2 style="font-size: 2.5rem;">AuraFit Journal</h2>
-                    <p id="j-date" class="handwritten" style="font-size: 1.2rem;"></p>
-                </div>
-
-                <div class="j-section">
-                    <p class="handwritten" style="font-size: 1.4rem;">"Perjalananku Hari Ini..."</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
-                        <div>
-                            <p style="font-size: 0.85rem;"><b>Skintone:</b> <span id="j-skin"></span></p>
-                            <div id="j-pal" style="display: flex; gap: 5px; margin: 5px 0;"></div>
-                            <p style="font-size: 0.85rem;"><b>Bentuk Wajah:</b> <span id="j-face"></span></p>
-                        </div>
-                        <div>
-                            <p style="font-size: 0.85rem;"><b>Status BMI:</b> <span id="j-bmi"></span></p>
-                            <p style="font-size: 0.7rem; line-height: 1.4;" id="j-tips"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="j-section">
-                    <h4><img src="https://cdn-icons-png.flaticon.com/512/3570/3570114.png" class="j-icon">Face & Style Framing</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div id="j-hijab" class="grid-rec"></div>
-                        <div id="j-hair" class="grid-rec"></div>
-                    </div>
-                </div>
-
-                <div class="j-section">
-                    <h4><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="j-icon">Modest OOTD Collection</h4>
-                    <div id="j-ootd" class="grid-ootd" style="grid-template-columns: repeat(5, 1fr);"></div>
-                </div>
-
-                <div class="j-section" style="border: none;">
-                    <h4><img src="https://cdn-icons-png.flaticon.com/512/2927/2927347.png" class="j-icon">Weekly Healthy Meal Plan</h4>
-                    <table id="j-meal"></table>
-                </div>
+    <div id="step-1" class="slide">
+        <h2 style="color: var(--text-dark); margin-bottom: 20px;">Skintone Analysis</h2>
+        <div class="cam-container">
+            <video id="video-skin" autoplay playsinline></video>
+        </div>
+        <button class="btn-aura" onclick="analyzeSkin()">Analyze Skintone</button>
+        <div id="skin-result" style="margin-top: 20px; display: none; text-align: center;">
+            <p>Aura Anda: <b id="skin-name">Bright Spring</b></p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #FF5733;"></div>
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #FFC300;"></div>
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #DAF7A6;"></div>
             </div>
+            <button class="btn-aura" style="margin-top: 30px;" onclick="nextStep(5)">Lihat Jurnal Akhir</button>
+        </div>
+    </div>
+
+    <div id="step-5" class="slide">
+        <div class="journal-paper">
+            <h2 style="font-family: 'Playfair Display'; color: var(--text-dark);">AuraFit Journal</h2>
+            <p style="font-family: 'Patrick Hand'; color: var(--primary);">Minggu, 11 Januari 2026</p>
             
-            <div style="margin-top: 30px; text-align: center;">
-                <button class="btn btn-next" onclick="window.print()">Cetak / Simpan Jurnal</button>
-                <button class="btn btn-back" onclick="location.reload()">Mulai Baru</button>
+            <div class="j-section">
+                <h4>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 10px;">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    Modest OOTD Collection
+                </h4>
+                <div class="j-grid">
+                    <div class="j-card"><img src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?q=80&w=300" alt="Hijab"><p style="padding: 5px;">Modest Chic</p></div>
+                    <div class="j-card"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=300" alt="Dress"><p style="padding: 5px;">Elegant Rose</p></div>
+                    <div class="j-card"><img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=300" alt="Style"><p style="padding: 5px;">Pastel Flow</p></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; display: flex; gap: 10px;">
+                <button class="btn-aura" style="flex: 1;" onclick="window.print()">Cetak Jurnal</button>
+                <button class="btn-aura" style="flex: 1; background: #eee; color: #666;" onclick="location.reload()">Mulai Baru</button>
             </div>
         </div>
-
     </div>
 
     <script>
-        let userData = { skin: '', palette: [], face: '', bmi: '', cat: '', tips: '', meal: [], ootd: [], hijab: [], hair: [] };
-        let stream = null;
-
-        function nav(id) {
+        function nextStep(step) {
             document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-            document.getElementById(`step-${id}`).classList.add('active');
-            if(id === 1) startCam('v-skin');
-            else if(id === 2) startCam('v-face');
-            else stopCam();
+            document.getElementById('step-' + step).classList.add('active');
+            if(step === 1) startCamera();
         }
 
-        async function startCam(id) {
-            stopCam();
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-            document.getElementById(id).srcObject = stream;
+        async function startCamera() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            document.getElementById('video-skin').srcObject = stream;
         }
 
-        function stopCam() { if(stream) stream.getTracks().forEach(t => t.stop()); }
-
-        function scanSkin() {
-            const types = ["Cool Winter", "Warm Autumn", "Light Summer", "Deep Autumn", "Bright Spring"];
-            userData.skin = types[Math.floor(Math.random() * types.length)];
-            userData.palette = ['#2b2d42', '#8d99ae', '#edf2f4', '#ef233c']; // Mock
-            document.getElementById('res-skin').classList.remove('hidden');
-            document.getElementById('skin-type-val').innerText = userData.skin;
-            const pal = document.getElementById('pal-skin'); pal.innerHTML = '';
-            userData.palette.forEach(c => pal.innerHTML += `<div style="width:30px;height:30px;border-radius:50%;background:${c};"></div>`);
-        }
-
-        function scanFace() {
-            const faces = ["Oval", "Bulat", "Kotak", "Hati", "Panjang"];
-            userData.face = faces[Math.floor(Math.random() * faces.length)];
-            document.getElementById('face-type-val').innerText = userData.face;
-            
-            const recData = {
-                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150",
-                text: "Memberikan ilusi wajah lebih proporsional."
-            };
-
-            userData.hijab = Array(3).fill(recData);
-            userData.hair = Array(3).fill(recData);
-
-            const render = (container, data) => {
-                container.innerHTML = '';
-                data.forEach(d => {
-                    container.innerHTML += `<div class="card"><img src="${d.img}"><div class="card-body"><p>${d.text}</p></div></div>`;
-                });
-            };
-
-            render(document.getElementById('h-recs'), userData.hijab);
-            render(document.getElementById('r-recs'), userData.hair);
-            document.getElementById('res-face').classList.remove('hidden');
-        }
-
-        function calcBMI() {
-            const w = document.getElementById('w').value;
-            const h = document.getElementById('h').value;
-            const bmi = (w / ((h/100)**2)).toFixed(1);
-            userData.cat = bmi < 18.5 ? "Kurus" : (bmi < 25 ? "Normal" : "Berlebih");
-            userData.bmi = bmi;
-            userData.tips = "Olahraga kardio 3x seminggu & perbanyak serat.";
-            
-            const meals = [
-                {w: "Pagi", m: "Bubur Ayam & Teh Hijau"},
-                {w: "Siang", m: "Nasi Merah & Ayam Bakar"},
-                {w: "Sore", m: "Buah Potong / Yogurt"},
-                {w: "Malam", m: "Sup Sayur Tahu"}
-            ];
-            userData.meal = meals;
-
-            document.getElementById('bmi-status-text').innerText = `BMI: ${bmi} (${userData.cat})`;
-            document.getElementById('bmi-exercise').innerText = userData.tips;
-            
-            const table = document.getElementById('meal-table');
-            table.innerHTML = '';
-            meals.forEach(m => table.innerHTML += `<tr><td>${m.w}</td><td>${m.m}</td></tr>`);
-            document.getElementById('res-bmi').classList.remove('hidden');
-            renderOOTD();
-        }
-
-        function renderOOTD() {
-            const ootds = Array(5).fill({
-                n: "Modest Chic", 
-                i: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=300", 
-                d: "Potongan longgar yang elegan untuk semua bentuk tubuh."
-            });
-            userData.ootd = ootds;
-            const container = document.getElementById('ootd-list');
-            container.innerHTML = '';
-            ootds.forEach(o => {
-                container.innerHTML += `<div class="card"><img src="${o.i}" style="height:200px;"><div class="card-body"><b>${o.n}</b><p>${o.d}</p></div></div>`;
-            });
-        }
-
-        function buildJournal() {
-            const now = new Date();
-            document.getElementById('j-date').innerText = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-            document.getElementById('j-skin').innerText = userData.skin;
-            document.getElementById('j-face').innerText = userData.face;
-            document.getElementById('j-bmi').innerText = `${userData.bmi} (${userData.cat})`;
-            document.getElementById('j-tips').innerText = userData.tips;
-
-            const pal = document.getElementById('j-pal'); pal.innerHTML = '';
-            userData.palette.forEach(c => pal.innerHTML += `<div style="width:20px;height:20px;border-radius:50%;background:${c};"></div>`);
-
-            const hJ = document.getElementById('j-hijab'); hJ.innerHTML = '';
-            userData.hijab.forEach(d => hJ.innerHTML += `<div class="card"><img src="${d.img}"><p style="font-size:0.6rem; padding:5px;">${d.text}</p></div>`);
-
-            const rJ = document.getElementById('j-hair'); rJ.innerHTML = '';
-            userData.hair.forEach(d => rJ.innerHTML += `<div class="card"><img src="${d.img}"><p style="font-size:0.6rem; padding:5px;">${d.text}</p></div>`);
-
-            const ootdJ = document.getElementById('j-ootd'); ootdJ.innerHTML = '';
-            userData.ootd.forEach(o => ootdJ.innerHTML += `<div class="card"><img src="${o.i}"><p style="font-size:0.5rem; padding:3px;">${o.n}</p></div>`);
-
-            const mealJ = document.getElementById('j-meal');
-            mealJ.innerHTML = '<thead><tr><th>Waktu</th><th>Menu Sehat</th></tr></thead>';
-            userData.meal.forEach(m => mealJ.innerHTML += `<tr><td>${m.w}</td><td>${m.m}</td></tr>`);
+        function analyzeSkin() {
+            document.getElementById('skin-result').style.display = 'block';
         }
     </script>
 </body>
