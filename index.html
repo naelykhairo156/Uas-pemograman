@@ -1,208 +1,99 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraFit - Personalized Beauty & Style</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #94a684;
-            --primary-dark: #839473;
-            --soft-pink: #FADBD8;
-            --soft-blue: #D6EAF8;
-            --soft-green: #B2D8B2;
-            --soft-yellow: #F9E79F;
-            --bg-creme: #fdfaf6;
-            --text-dark: #4a5d3f;
-        }
-
-        * { margin: 0; padding: 0; box-space: border-box; }
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: var(--bg-creme); 
-            color: #333; 
-            overflow-x: hidden;
-        }
-
-        /* --- ANIMASI GLOBAL --- */
-        @keyframes breeze {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(10px, -15px) rotate(3deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        /* --- NAVIGATION SYSTEM --- */
-        .slide {
-            display: none;
-            min-height: 100vh;
-            width: 100%;
-            position: relative;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            flex-direction: column;
-            align-items: center;
-        }
-        .slide.active { display: flex; }
-
-        /* --- DECORATION SYSTEM --- */
-        .decor-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-        .flower-svg { position: absolute; width: 180px; height: 180px; opacity: 0.7; }
-        
-        /* --- DASHBOARD (STEP 0) --- */
-        .hero-content { text-align: center; margin-top: 15vh; z-index: 10; }
-        .main-title { font-family: 'Playfair Display', serif; font-size: 4.5rem; color: var(--text-dark); }
-        .main-slogan { font-size: 1.2rem; color: #888; margin-bottom: 50px; }
-
-        /* --- ANALYZER COMPONENTS --- */
-        .cam-container {
-            width: 300px; height: 300px; border-radius: 50%;
-            overflow: hidden; border: 8px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            background: #000; position: relative; margin: 20px 0;
-        }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .btn-aura {
-            background: var(--primary); color: white; border: none;
-            padding: 15px 40px; border-radius: 50px; font-weight: 600;
-            cursor: pointer; transition: 0.3s;
-        }
-        .btn-aura:hover { transform: translateY(-3px); background: var(--primary-dark); }
-
-        /* --- JURNAL (STEP 5) --- */
-        .journal-paper {
-            background: white; width: 100%; max-width: 800px;
-            padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-        }
-        .j-section { margin-top: 30px; border-top: 1px solid #f0f0f0; padding-top: 20px; }
-        .j-section h4 { display: flex; align-items: center; color: var(--text-dark); margin-bottom: 15px; }
-        .j-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-        .j-card { border-radius: 10px; overflow: hidden; background: #fafafa; font-size: 0.8rem; }
-        .j-card img { width: 100%; height: 150px; object-fit: cover; }
-
-        /* --- RESPONSIVE POSITIONS --- */
-        @media (max-width: 768px) {
-            .main-title { font-size: 3rem; }
-            .flower-svg { width: 120px; height: 120px; }
-            /* Mobile positions: vertical spread */
-            .p-tl { top: 5%; left: -20px; }
-            .p-tr { top: 30%; right: -20px; }
-            .p-bl { top: 60%; left: -20px; }
-            .p-br { top: 85%; right: -20px; }
-        }
-        @media (min-width: 769px) {
-            /* Desktop positions: corner framing */
-            .p-tl { top: 30px; left: 30px; }
-            .p-tr { top: 30px; right: 30px; }
-            .p-bl { bottom: 30px; left: 30px; }
-            .p-br { bottom: 30px; right: 30px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>AuraFit | Personalized Beauty & Health</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="decor-layer" id="global-decor">
-        <div class="flower-svg p-tl" style="animation: breeze 10s infinite;">
-            <svg viewBox="0 0 100 100" fill="none" stroke="#AED6F1" stroke-width="1.5">
-                <path d="M50 50 Q70 10 90 50 T50 90 T10 50 T50 10" />
-            </svg>
-        </div>
-        <div class="flower-svg p-tr" style="animation: breeze 12s infinite reverse;">
-            <svg viewBox="0 0 100 100" fill="none" stroke="#B2D8B2" stroke-width="1.5">
-                <path d="M20 80 Q40 40 80 20 M20 80 Q60 70 80 20" />
-            </svg>
-        </div>
-        <div class="flower-svg p-bl" style="animation: breeze 8s infinite;">
-            <svg viewBox="0 0 100 100" fill="none" stroke="#FADBD8" stroke-width="1.5">
-                <circle cx="50" cy="50" r="10" />
-                <path d="M50 40 Q60 20 80 40 T50 60 T20 40 T50 40" />
-            </svg>
-        </div>
-        <div class="flower-svg p-br" style="animation: pulse 5s infinite;">
-            <svg viewBox="0 0 100 100" fill="none" stroke="#F9E79F" stroke-width="2">
-                <circle cx="50" cy="50" r="15" />
-                <path d="M50 10 L50 25 M85 50 L70 50 M50 90 L50 75 M15 50 L30 50" stroke-linecap="round"/>
-            </svg>
-        </div>
+<div class="container">
+
+  <!-- DASHBOARD -->
+  <section class="step active">
+    <h1>🌸 AuraFit</h1>
+    <p class="tagline">Personalized beauty & style, just for you</p>
+    <button onclick="nextStep()">Mulai</button>
+  </section>
+
+  <!-- SKINTONE -->
+  <section class="step">
+    <h2>Skintone Scanner</h2>
+    <p>Simulasi pemindaian kamera...</p>
+    <button onclick="scanSkintone()">Scan Sekarang</button>
+    <div id="skintoneResult"></div>
+    <div class="nav">
+      <button onclick="prevStep()">Kembali</button>
+      <button onclick="nextStep()">Selanjutnya</button>
     </div>
+  </section>
 
-    <div id="step-0" class="slide active">
-        <div class="hero-content">
-            <h1 class="main-title">AuraFit</h1>
-            <p class="main-slogan">Personalized beauty & style, just for you</p>
-            <button class="btn-aura" onclick="nextStep(1)">Mulai Perjalanan Aura</button>
-        </div>
+  <!-- FACE FRAMING -->
+  <section class="step">
+    <h2>Face Framing Analysis</h2>
+    <p>Memindai bentuk wajah...</p>
+    <button onclick="scanFace()">Scan Wajah</button>
+    <div id="faceResult"></div>
+    <div class="image-row">
+      <img id="hijabImg">
+      <img id="hairImg">
     </div>
-
-    <div id="step-1" class="slide">
-        <h2 style="color: var(--text-dark); margin-bottom: 20px;">Skintone Analysis</h2>
-        <div class="cam-container">
-            <video id="video-skin" autoplay playsinline></video>
-        </div>
-        <button class="btn-aura" onclick="analyzeSkin()">Analyze Skintone</button>
-        <div id="skin-result" style="margin-top: 20px; display: none; text-align: center;">
-            <p>Aura Anda: <b id="skin-name">Bright Spring</b></p>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #FF5733;"></div>
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #FFC300;"></div>
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #DAF7A6;"></div>
-            </div>
-            <button class="btn-aura" style="margin-top: 30px;" onclick="nextStep(5)">Lihat Jurnal Akhir</button>
-        </div>
+    <div class="nav">
+      <button onclick="prevStep()">Kembali</button>
+      <button onclick="nextStep()">Selanjutnya</button>
     </div>
+  </section>
 
-    <div id="step-5" class="slide">
-        <div class="journal-paper">
-            <h2 style="font-family: 'Playfair Display'; color: var(--text-dark);">AuraFit Journal</h2>
-            <p style="font-family: 'Patrick Hand'; color: var(--primary);">Minggu, 11 Januari 2026</p>
-            
-            <div class="j-section">
-                <h4>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 10px;">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                    Modest OOTD Collection
-                </h4>
-                <div class="j-grid">
-                    <div class="j-card"><img src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?q=80&w=300" alt="Hijab"><p style="padding: 5px;">Modest Chic</p></div>
-                    <div class="j-card"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=300" alt="Dress"><p style="padding: 5px;">Elegant Rose</p></div>
-                    <div class="j-card"><img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=300" alt="Style"><p style="padding: 5px;">Pastel Flow</p></div>
-                </div>
-            </div>
-
-            <div style="margin-top: 40px; display: flex; gap: 10px;">
-                <button class="btn-aura" style="flex: 1;" onclick="window.print()">Cetak Jurnal</button>
-                <button class="btn-aura" style="flex: 1; background: #eee; color: #666;" onclick="location.reload()">Mulai Baru</button>
-            </div>
-        </div>
+  <!-- BMI -->
+  <section class="step">
+    <h2>BMI & Health</h2>
+    <input type="number" id="bb" placeholder="Berat Badan (kg)">
+    <input type="number" id="tb" placeholder="Tinggi Badan (cm)">
+    <button onclick="hitungBMI()">Hitung BMI</button>
+    <div id="bmiResult"></div>
+    <div id="mealTable"></div>
+    <div class="nav">
+      <button onclick="prevStep()">Kembali</button>
+      <button onclick="nextStep()">Selanjutnya</button>
     </div>
+  </section>
 
-    <script>
-        function nextStep(step) {
-            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-            document.getElementById('step-' + step).classList.add('active');
-            if(step === 1) startCamera();
-        }
+  <!-- OOTD -->
+  <section class="step">
+    <h2>OOTD Advisor</h2>
+    <p>ini rekomendasi outfit yang cocok untuk mu 💕</p>
+    <img id="ootdImg">
+    <div class="nav">
+      <button onclick="prevStep()">Kembali</button>
+      <button onclick="nextStep()">Lihat Jurnal</button>
+    </div>
+  </section>
 
-        async function startCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            document.getElementById('video-skin').srcObject = stream;
-        }
+  <!-- JURNAL -->
+  <section class="step journal">
+    <h2>🌷 AuraFit Journal</h2>
+    <p id="date"></p>
 
-        function analyzeSkin() {
-            document.getElementById('skin-result').style.display = 'block';
-        }
-    </script>
+    <div class="journal-box">
+      <p><strong>Skintone:</strong> <span id="jSkintone"></span></p>
+      <p><strong>Bentuk Wajah:</strong> <span id="jFace"></span></p>
+
+      <div class="image-row">
+        <img id="jHijab">
+        <img id="jHair">
+      </div>
+
+      <p><strong>BMI:</strong> <span id="jBMI"></span></p>
+      <div id="jMeal"></div>
+
+      <img id="jOOTD">
+    </div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
