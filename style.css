@@ -147,3 +147,35 @@ td, th {
   width: 80%;
   max-width: 360px;
 }
+
+/* Menaruh konten di tengah layar laptop */
+.dash-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+/* Memperbesar dekorasi bulat di sudut */
+.flower {
+    position: absolute;
+    width: 400px; /* Ukuran diperbesar */
+    height: 400px; /* Ukuran diperbesar */
+    filter: blur(80px); /* Efek soft */
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.pink {
+    background: #ffdeff;
+    top: -100px;
+    right: -100px;
+}
+
+.blue {
+    background: #eaf6ff;
+    bottom: -100px;
+    left: -100px;
+}
