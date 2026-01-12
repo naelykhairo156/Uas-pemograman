@@ -86,17 +86,41 @@ function hitungBMI() {
     bmiTips.innerText='Cardio & defisit kalori';
   }
 
-  bmiResult.innerText=`BMI: ${bmi.toFixed(1)} (${bmiStatus})`;
+  let menuMakanan = ""; 
 
-  mealTable.innerHTML=`
-    <table>
-      <tr><th>Waktu</th><th>Menu</th></tr>
-      <tr><td>Pagi</td><td>Nasi uduk + telur + teh</td></tr>
-      <tr><td>Siang</td><td>Nasi + ayam + sayur</td></tr>
-      <tr><td>Sore</td><td>Buah + yoghurt</td></tr>
-      <tr><td>Malam</td><td>Sup + tempe</td></tr>
-    </table>
-  `;
+    if (bmi < 18.5) {
+        bmiStatus = 'Underweight';
+        bmiCategory = 'kurus';
+        bmiTips.innerText = 'Tambah asupan kalori dan protein';
+        menuMakanan = `
+            <tr><td>Pagi</td><td>Oatmeal + Susu Full Cream + Telur</td></tr>
+            <tr><td>Siang</td><td>Nasi Putih + Dada Ayam + Alpukat</td></tr>
+            <tr><td>Malam</td><td>Daging Sapi/Ikan + Tumis Sayur</td></tr>`;
+    } else if (bmi < 25) {
+        bmiStatus = 'Normal';
+        bmiCategory = 'normal';
+        bmiTips.innerText = 'Pertahankan pola hidup seimbang';
+        menuMakanan = `
+            <tr><td>Pagi</td><td>Nasi Uduk + Telur + Teh</td></tr>
+            <tr><td>Siang</td><td>Nasi + Ayam + Sayur</td></tr>
+            <tr><td>Malam</td><td>Sup + Tempe</td></tr>`;
+    } else {
+        bmiStatus = 'Overweight';
+        bmiCategory = 'gemuk';
+        bmiTips.innerText = 'Cardio & defisit kalori';
+        menuMakanan = `
+            <tr><td>Pagi</td><td>Putih Telur Rebus + Buah</td></tr>
+            <tr><td>Siang</td><td>Sedikit Nasi Merah + Dada Ayam + Brokoli</td></tr>
+            <tr><td>Malam</td><td>Ikan Panggang / Salad Sayur</td></tr>`;
+    }
+
+    bmiResult.innerText = `BMI: ${bmi.toFixed(1)} (${bmiStatus})`;
+  
+    mealTable.innerHTML = `
+        <table>
+            <tr><th>Waktu</th><th>Menu</th></tr>
+            ${menuMakanan}
+        </table>`;
 }
 
 // JOURNAL
