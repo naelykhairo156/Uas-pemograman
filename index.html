@@ -11,92 +11,63 @@
 <div class="container">
 
   <!-- DASHBOARD -->
-  <section id="dashboard">
-    <h1>🌸 AuraFit</h1>
-    <p>Personalized beauty & health advisor</p>
-    <button onclick="goTo('skintone')">Mulai</button>
+  <section id="dashboard" class="section active center">
+    <h1>AuraFit</h1>
+    <p>Personalized beauty & style, just for you</p>
+    <button onclick="nextSection('skintone')">Mulai</button>
   </section>
 
   <!-- SKINTONE -->
-  <section id="skintone">
+  <section id="skintone" class="section">
     <h2>Skintone Scanner</h2>
-
-    <video id="skinVideo" autoplay playsinline></video>
-    <canvas id="skinCanvas"></canvas>
-
-    <button onclick="takeSkinPhoto()">Ambil Foto</button>
-    <p id="skinResult"></p>
-    <p class="error" id="skinError"></p>
-
-    <div class="nav">
-      <button onclick="goTo('dashboard')">Kembali</button>
-      <button onclick="goTo('face')">Selanjutnya</button>
-    </div>
+    <video id="videoSkin" autoplay></video>
+    <canvas id="canvasSkin"></canvas>
+    <p id="skinError" class="error"></p>
+    <button onclick="startCamera('skin')">Aktifkan Kamera</button>
+    <button onclick="captureSkin()">Ambil Foto</button>
+    <div id="skinResult"></div>
+    <button onclick="nextSection('face')">Selanjutnya</button>
   </section>
 
-  <!-- FACE -->
-  <section id="face">
+  <!-- FACE SHAPE -->
+  <section id="face" class="section">
     <h2>Face Framing</h2>
-
-    <video id="faceVideo" autoplay playsinline></video>
-    <canvas id="faceCanvas"></canvas>
-
-    <button onclick="takeFacePhoto()">Ambil Foto</button>
-    <p id="faceResult"></p>
-    <p class="error" id="faceError"></p>
-
-    <div class="image-row">
-      <img id="hijabImg">
-      <img id="hairImg">
+    <video id="videoFace" autoplay></video>
+    <canvas id="canvasFace"></canvas>
+    <button onclick="startCamera('face')">Aktifkan Kamera</button>
+    <button onclick="detectFace()">Scan Wajah</button>
+    <div class="img-row">
+      <img id="imgHijab">
+      <img id="imgRambut">
     </div>
-
-    <div class="nav">
-      <button onclick="goTo('skintone')">Kembali</button>
-      <button onclick="goTo('bmi')">Selanjutnya</button>
-    </div>
+    <p id="faceText"></p>
+    <button onclick="nextSection('bmi')">Selanjutnya</button>
   </section>
 
   <!-- BMI -->
-  <section id="bmi">
+  <section id="bmi" class="section">
     <h2>BMI & Health</h2>
-
-    <input id="bb" type="number" placeholder="Berat Badan (kg)">
-    <input id="tb" type="number" placeholder="Tinggi Badan (cm)">
-    <button onclick="hitungBMI()">Hitung BMI</button>
-
+    <input type="number" id="bb" placeholder="Berat (kg)">
+    <input type="number" id="tb" placeholder="Tinggi (cm)">
+    <button onclick="hitungBMI()">Hitung</button>
     <p id="bmiResult"></p>
-
-    <div class="nav">
-      <button onclick="goTo('face')">Kembali</button>
-      <button onclick="goTo('ootd')">Selanjutnya</button>
-    </div>
+    <div id="mealTable"></div>
+    <button onclick="nextSection('ootd')">Selanjutnya</button>
   </section>
 
   <!-- OOTD -->
-  <section id="ootd">
-    <h2>OOTD Advisor 👩</h2>
+  <section id="ootd" class="section">
+    <h2>Rekomendasi OOTD Sesuai BMI Kamu</h2>
     <p>ini rekomendasi outfit yang cocok untuk mu 💕</p>
-    <img id="ootdImg">
-
-    <div class="nav">
-      <button onclick="goTo('bmi')">Kembali</button>
-      <button onclick="goTo('journal')">Jurnal</button>
-    </div>
+    <img id="imgOOTD">
+    <button onclick="nextSection('journal')">Lihat Jurnal</button>
   </section>
 
   <!-- JOURNAL -->
-  <section id="journal">
-    <h2>🌷 AuraFit Journal</h2>
-    <p id="date"></p>
-
-    <p><strong>Skintone:</strong> <span id="jSkin"></span></p>
-    <p><strong>Bentuk Wajah:</strong> <span id="jFace"></span></p>
-
-    <img id="jHijab">
-    <img id="jHair">
-
-    <p><strong>BMI:</strong> <span id="jBMI"></span></p>
-    <img id="jOOTD">
+  <section id="journal" class="section">
+    <h2>✨ AuraFit Journal ✨</h2>
+    <p id="dateNow"></p>
+    <div id="journalContent"></div>
   </section>
 
 </div>
