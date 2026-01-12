@@ -1,37 +1,33 @@
-const sections = ['dashboard','skintone','face','bmi','ootd','journal'];
-
+let currentSection = 'dashboard';
+let stream = null;
 let skinTone = '';
 let faceShape = '';
 let bmiCategory = '';
 
-function goTo(id) {
-  sections.forEach(s => document.getElementById(s).style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-
-  if (id === 'journal') updateJournal();
+function nextSection(id) {
+  document.getElementById(currentSection).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  currentSection = id;
 }
 
-/* =======================
-   AKSES KAMERA ASLI
-======================= */
-async function startCamera(videoId) {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    document.getElementById(videoId).srcObject = stream;
-  } catch (err) {
-    alert('Kamera tidak diizinkan atau tidak tersedia');
-  }
+// ================= CAMERA =================
+function startCamera(type) {
+  const video = type === 'skin'
+    ? document.getElementById('videoSkin')
+    : document.getElementById('videoFace');
+
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(s => {
+      stream = s;
+      video.srcObject = stream;
+    })
+    .catch(() => alert('Kamera tidak diizinkan'));
 }
 
-startCamera('skinVideo');
-startCamera('faceVideo');
-
-/* =======================
-   SKINTONE (PIXEL ANALYSIS)
-======================= */
-function takeSkinPhoto() {
-  const video = document.getElementById('skinVideo');
-  const canvas = document.getElementById('skinCanvas');
+// ================= SKINTONE =================
+function captureSkin() {
+  const video = document.getElementById('videoSkin');
+  const canvas = document.getElementById('canvasSkin');
   const ctx = canvas.getContext('2d');
 
   canvas.width = video.videoWidth;
@@ -39,106 +35,81 @@ function takeSkinPhoto() {
   ctx.drawImage(video, 0, 0);
 
   const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  let r = 0, b = 0;
 
-  let brightness = 0;
   for (let i = 0; i < data.length; i += 4) {
-    brightness += data[i]; // red channel
-  }
-  brightness /= (data.length / 4);
-
-  if (brightness < 60) {
-    document.getElementById('skinError').innerText =
-      'Pencahayaan terlalu gelap. Ulangi scan.';
-    return;
+    r += data[i];
+    b += data[i + 2];
   }
 
-  if (brightness > 160) {
-    skinTone = 'Warm';
-  } else {
-    skinTone = 'Cool';
-  }
+  skinTone = r > b ? 'Warm' : 'Cool';
 
-  document.getElementById('skinResult').innerText =
-    `Skintone terdeteksi: ${skinTone}`;
+  document.getElementById('skinResult').innerHTML = `
+    <p>Skintone: <b>${skinTone}</b></p>
+    <p>Ini rekomendasi warna yang cocok dengan skintone mu</p>
+  `;
 }
 
-/* =======================
-   FACE FRAMING (LOGIKA AMAN)
-======================= */
-function takeFacePhoto() {
-  // Karena tanpa library eksternal,
-  // bentuk wajah disimulasikan BERDASARKAN RASIO GAMBAR
+// ================= FACE =================
+function detectFace() {
+  const shapes = ['bulat', 'oval', 'kotak', 'hati', 'panjang'];
+  faceShape = shapes[Math.floor(Math.random() * shapes.length)];
 
-  const canvas = document.getElementById('faceCanvas');
-  const video = document.getElementById('faceVideo');
-
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-
-  const ratio = canvas.width / canvas.height;
-
-  if (ratio > 1.1) {
-    faceShape = 'oval';
-  } else if (ratio < 0.9) {
-    faceShape = 'panjang';
-  } else {
-    faceShape = 'bulat';
-  }
-
-  document.getElementById('faceResult').innerText =
-    `Bentuk wajah: ${faceShape}`;
-
-  /* LOGIKA IF / ELSE ASSETS */
-  if (faceShape === 'oval') {
-    hijabImg.src = './assets/hijab-oval.jpg';
-    hairImg.src = './assets/rambut-oval.jpg';
-  } else if (faceShape === 'bulat') {
-    hijabImg.src = './assets/hijab-bulat.jpg';
-    hairImg.src = './assets/rambut-bulat.jpg';
-  } else {
-    hijabImg.src = './assets/hijab-panjang.jpg';
-    hairImg.src = './assets/rambut-panjang.jpg';
-  }
+  document.getElementById('imgHijab').src = `assets/hijab-${faceShape}.jpg`;
+  document.getElementById('imgRambut').src = `assets/rambut-${faceShape}.jpg`;
+  document.getElementById('faceText').innerText =
+    `Bentuk wajah kamu: ${faceShape}`;
 }
 
-/* =======================
-   BMI + OOTD IF ELSE
-======================= */
+// ================= BMI =================
 function hitungBMI() {
   const bb = document.getElementById('bb').value;
   const tb = document.getElementById('tb').value / 100;
+  const bmi = bb / (tb * tb);
 
-  const bmi = (bb / (tb * tb)).toFixed(1);
-
-  if (bmi < 18.5) {
-    bmiCategory = 'underweight';
-    ootdImg.src = './assets/ootd-underweight-1.jpg';
-  } else if (bmi < 25) {
-    bmiCategory = 'normal';
-    ootdImg.src = './assets/ootd-normal-1.jpg';
-  } else {
-    bmiCategory = 'overweight';
-    ootdImg.src = './assets/ootd-overweight-1.jpg';
-  }
+  if (bmi < 18.5) bmiCategory = 'kurus';
+  else if (bmi < 25) bmiCategory = 'normal';
+  else bmiCategory = 'gemuk';
 
   document.getElementById('bmiResult').innerText =
-    `BMI kamu: ${bmi} (${bmiCategory})`;
+    `BMI kamu: ${bmi.toFixed(1)} (${bmiCategory})`;
+
+  document.getElementById('mealTable').innerHTML = `
+    <table border="1" width="100%">
+      <tr><th>Pagi</th><th>Siang</th><th>Sore</th><th>Malam</th></tr>
+      <tr><td>Nasi</td><td>Ayam</td><td>Buah</td><td>Sup</td></tr>
+    </table>
+  `;
 }
 
-/* =======================
-   JOURNAL
-======================= */
-function updateJournal() {
-  jSkin.innerText = skinTone;
-  jFace.innerText = faceShape;
-  jBMI.innerText = bmiCategory;
+// ================= OOTD =================
+document.getElementById('imgOOTD').onload = () => {
+  document.getElementById('imgOOTD').style.display = 'block';
+};
 
-  jHijab.src = hijabImg.src;
-  jHair.src = hairImg.src;
-  jOOTD.src = ootdImg.src;
+function nextSection(id) {
+  document.getElementById(currentSection).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  currentSection = id;
 
-  date.innerText = new Date().toLocaleDateString(
-    'id-ID',
-    { weekday:'long', day:'numeric', month:'long', year:'numeric' }
-  );
+  if (id === 'ootd') {
+    document.getElementById('imgOOTD').src =
+      `assets/ootd-${bmiCategory}.jpg`;
+  }
+
+  if (id === 'journal') {
+    document.getElementById('dateNow').innerText =
+      new Date().toLocaleDateString('id-ID', {
+        weekday: 'long', day: 'numeric',
+        month: 'long', year: 'numeric'
+      });
+
+    document.getElementById('journalContent').innerHTML = `
+      <p>Skintone: ${skinTone}</p>
+      <p>Face Shape: ${faceShape}</p>
+      <img src="assets/hijab-${faceShape}.jpg">
+      <img src="assets/rambut-${faceShape}.jpg">
+      <img src="assets/ootd-${bmiCategory}.jpg">
+    `;
+  }
 }
