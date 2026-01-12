@@ -179,21 +179,3 @@ td, th {
     bottom: -100px;
     left: -100px;
 }
-
-/* Membuat konten dashboard dan halaman lainnya di tengah layar laptop */
-.page.center {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Memastikan tinggi halaman penuh layar */
-    text-align: center;
-}
-
-/* Memperbesar dekorasi bulatan pink dan biru soft */
-.flower {
-    width: 600px; /* Diperbesar sesuai permintaanmu */
-    height: 600px;
-    filter: blur(120px); /* Tetap soft meski besar */
-    opacity: 0.3; /* Tidak terlalu mencolok */
-}
