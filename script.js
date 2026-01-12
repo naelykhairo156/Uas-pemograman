@@ -1,115 +1,112 @@
-let currentSection = 'dashboard';
-let stream = null;
+let currentPage = 'dashboard';
 let skinTone = '';
 let faceShape = '';
 let bmiCategory = '';
 
-function nextSection(id) {
-  document.getElementById(currentSection).classList.remove('active');
-  document.getElementById(id).classList.add('active');
-  currentSection = id;
+function goTo(id) {
+  document.getElementById(currentPage).classList.remove('show');
+  document.getElementById(id).classList.add('show');
+  currentPage = id;
+
+  if (id === 'journal') renderJournal();
 }
 
-// ================= CAMERA =================
+// CAMERA
 function startCamera(type) {
   const video = type === 'skin'
-    ? document.getElementById('videoSkin')
-    : document.getElementById('videoFace');
+    ? videoSkin
+    : videoFace;
 
   navigator.mediaDevices.getUserMedia({ video: true })
-    .then(s => {
-      stream = s;
-      video.srcObject = stream;
-    })
+    .then(stream => video.srcObject = stream)
     .catch(() => alert('Kamera tidak diizinkan'));
 }
 
-// ================= SKINTONE =================
-function captureSkin() {
-  const video = document.getElementById('videoSkin');
-  const canvas = document.getElementById('canvasSkin');
-  const ctx = canvas.getContext('2d');
+// SKINTONE
+function scanSkintone() {
+  const ctx = canvasSkin.getContext('2d');
+  canvasSkin.width = videoSkin.videoWidth;
+  canvasSkin.height = videoSkin.videoHeight;
+  ctx.drawImage(videoSkin, 0, 0);
 
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  ctx.drawImage(video, 0, 0);
-
-  const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  let r = 0, b = 0;
+  const data = ctx.getImageData(0, 0, canvasSkin.width, canvasSkin.height).data;
+  let warm = 0, cool = 0;
 
   for (let i = 0; i < data.length; i += 4) {
-    r += data[i];
-    b += data[i + 2];
+    warm += data[i];
+    cool += data[i + 2];
   }
 
-  skinTone = r > b ? 'Warm' : 'Cool';
+  skinTone = warm > cool ? 'Warm' : 'Cool';
 
-  document.getElementById('skinResult').innerHTML = `
-    <p>Skintone: <b>${skinTone}</b></p>
+  const colors = skinTone === 'Warm'
+    ? ['#C68642','#D2B48C','#8B4513']
+    : ['#2E3A87','#008080','#6A0DAD'];
+
+  skinResult.innerHTML = `
+    <p><b>${skinTone}</b></p>
     <p>Ini rekomendasi warna yang cocok dengan skintone mu</p>
+    <div style="display:flex;justify-content:center;gap:10px">
+      ${colors.map(c=>`<div style="width:40px;height:40px;background:${c}"></div>`).join('')}
+    </div>
   `;
 }
 
-// ================= FACE =================
-function detectFace() {
-  const shapes = ['bulat', 'oval', 'kotak', 'hati', 'panjang'];
-  faceShape = shapes[Math.floor(Math.random() * shapes.length)];
+// FACE
+function scanFace() {
+  const shapes = ['bulat','oval','kotak','hati','panjang'];
+  faceShape = shapes[Math.floor(Math.random()*shapes.length)];
 
-  document.getElementById('imgHijab').src = `assets/hijab-${faceShape}.jpg`;
-  document.getElementById('imgRambut').src = `assets/rambut-${faceShape}.jpg`;
-  document.getElementById('faceText').innerText =
-    `Bentuk wajah kamu: ${faceShape}`;
+  imgHijab.src = `assets/hijab-${faceShape}.jpg`;
+  imgRambut.src = `assets/rambut-${faceShape}.jpg`;
 }
 
-// ================= BMI =================
+// BMI
 function hitungBMI() {
-  const bb = document.getElementById('bb').value;
-  const tb = document.getElementById('tb').value / 100;
+  const bb = +bb.value;
+  const tb = tb.value / 100;
   const bmi = bb / (tb * tb);
 
-  if (bmi < 18.5) bmiCategory = 'kurus';
-  else if (bmi < 25) bmiCategory = 'normal';
-  else bmiCategory = 'gemuk';
+  if (bmi < 18.5) {
+    bmiCategory = 'kurus';
+    bmiTips.innerText = 'Fokus pada surplus kalori dan angkat beban';
+  } else if (bmi < 25) {
+    bmiCategory = 'normal';
+    bmiTips.innerText = 'Pertahankan pola makan seimbang dan olahraga rutin';
+  } else {
+    bmiCategory = 'gemuk';
+    bmiTips.innerText = 'Fokus pada defisit kalori dan olahraga kardio';
+  }
 
-  document.getElementById('bmiResult').innerText =
-    `BMI kamu: ${bmi.toFixed(1)} (${bmiCategory})`;
+  bmiResult.innerText = `BMI kamu: ${bmi.toFixed(1)}`;
 
-  document.getElementById('mealTable').innerHTML = `
-    <table border="1" width="100%">
-      <tr><th>Pagi</th><th>Siang</th><th>Sore</th><th>Malam</th></tr>
-      <tr><td>Nasi</td><td>Ayam</td><td>Buah</td><td>Sup</td></tr>
+  mealTable.innerHTML = `
+    <table>
+      <tr><th>Waktu</th><th>Menu</th></tr>
+      <tr><td>Pagi</td><td>Omelet sayur + roti gandum + susu</td></tr>
+      <tr><td>Siang</td><td>Nasi + ayam panggang + sayur</td></tr>
+      <tr><td>Sore</td><td>Buah + yoghurt</td></tr>
+      <tr><td>Malam</td><td>Sup + tahu/tempe</td></tr>
     </table>
   `;
 }
 
-// ================= OOTD =================
-document.getElementById('imgOOTD').onload = () => {
-  document.getElementById('imgOOTD').style.display = 'block';
-};
+// JOURNAL
+function renderJournal() {
+  dateNow.innerText = new Date().toLocaleDateString('id-ID',{
+    weekday:'long',day:'numeric',month:'long',year:'numeric'
+  });
 
-function nextSection(id) {
-  document.getElementById(currentSection).classList.remove('active');
-  document.getElementById(id).classList.add('active');
-  currentSection = id;
+  journalContent.innerHTML = `
+    <p>Skintone: ${skinTone}</p>
+    <p>Bentuk Wajah: ${faceShape}</p>
+    <img src="assets/hijab-${faceShape}.jpg"><br>
+    <small>Hasil Rekomendasi Hijab kamu</small><br>
 
-  if (id === 'ootd') {
-    document.getElementById('imgOOTD').src =
-      `assets/ootd-${bmiCategory}.jpg`;
-  }
+    <img src="assets/rambut-${faceShape}.jpg"><br>
+    <small>Hasil Rekomendasi Rambut kamu</small><br>
 
-  if (id === 'journal') {
-    document.getElementById('dateNow').innerText =
-      new Date().toLocaleDateString('id-ID', {
-        weekday: 'long', day: 'numeric',
-        month: 'long', year: 'numeric'
-      });
-
-    document.getElementById('journalContent').innerHTML = `
-      <p>Skintone: ${skinTone}</p>
-      <p>Face Shape: ${faceShape}</p>
-      <img src="assets/hijab-${faceShape}.jpg">
-      <img src="assets/rambut-${faceShape}.jpg">
-      <img src="assets/ootd-${bmiCategory}.jpg">
-    `;
-  }
+    <img src="assets/ootd-${bmiCategory}.jpg"><br>
+    <small>👩 OOTD Collection</small>
+  `;
 }
