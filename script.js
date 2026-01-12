@@ -1,25 +1,24 @@
-let currentPage = 'dashboard';
+let current = 'dashboard';
 let skinTone = '';
+let palette = [];
 let faceShape = '';
+let bmi = 0;
+let bmiStatus = '';
 let bmiCategory = '';
 
 function goTo(id) {
-  document.getElementById(currentPage).classList.remove('show');
-  document.getElementById(id).classList.add('show');
-  currentPage = id;
-
+  document.getElementById(current).style.display = 'none';
+  document.getElementById(id).style.display = 'flex';
+  current = id;
   if (id === 'journal') renderJournal();
 }
 
 // CAMERA
 function startCamera(type) {
-  const video = type === 'skin'
-    ? videoSkin
-    : videoFace;
-
+  const video = type === 'skin' ? videoSkin : videoFace;
   navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => video.srcObject = stream)
-    .catch(() => alert('Kamera tidak diizinkan'));
+    .then(s => video.srcObject = s)
+    .catch(()=>alert('Kamera ditolak'));
 }
 
 // SKINTONE
@@ -27,27 +26,31 @@ function scanSkintone() {
   const ctx = canvasSkin.getContext('2d');
   canvasSkin.width = videoSkin.videoWidth;
   canvasSkin.height = videoSkin.videoHeight;
-  ctx.drawImage(videoSkin, 0, 0);
+  ctx.drawImage(videoSkin,0,0);
 
-  const data = ctx.getImageData(0, 0, canvasSkin.width, canvasSkin.height).data;
-  let warm = 0, cool = 0;
-
-  for (let i = 0; i < data.length; i += 4) {
-    warm += data[i];
-    cool += data[i + 2];
+  const data = ctx.getImageData(0,0,canvasSkin.width,canvasSkin.height).data;
+  let r=0,g=0,b=0;
+  for(let i=0;i<data.length;i+=4){
+    r+=data[i]; g+=data[i+1]; b+=data[i+2];
   }
 
-  skinTone = warm > cool ? 'Warm' : 'Cool';
+  const brightness = (r+g+b)/data.length;
+  if(brightness < 40){
+    skinError.innerText = 'Pencahayaan terlalu gelap! Cari tempat terang.';
+    return;
+  }
+  skinError.innerText = '';
 
-  const colors = skinTone === 'Warm'
-    ? ['#C68642','#D2B48C','#8B4513']
-    : ['#2E3A87','#008080','#6A0DAD'];
+  skinTone = r > b ? 'Warm' : 'Cool';
+  palette = skinTone === 'Warm'
+    ? ['#C68642','#A0522D','#DEB887']
+    : ['#1E3A8A','#008080','#6D28D9'];
 
   skinResult.innerHTML = `
-    <p><b>${skinTone}</b></p>
-    <p>Ini rekomendasi warna yang cocok dengan skintone mu</p>
-    <div style="display:flex;justify-content:center;gap:10px">
-      ${colors.map(c=>`<div style="width:40px;height:40px;background:${c}"></div>`).join('')}
+    <p>Skintone Terdeteksi: <b>${skinTone}</b></p>
+    <p>Ini rekomendasi warna yang cocok untukmu:</p>
+    <div style="display:flex;gap:10px">
+      ${palette.map(c=>`<div style="width:40px;height:40px;background:${c}"></div>`).join('')}
     </div>
   `;
 }
@@ -56,57 +59,66 @@ function scanSkintone() {
 function scanFace() {
   const shapes = ['bulat','oval','kotak','hati','panjang'];
   faceShape = shapes[Math.floor(Math.random()*shapes.length)];
-
+  faceText.innerText = `Bentuk Wajah Anda: ${faceShape}`;
   imgHijab.src = `assets/hijab-${faceShape}.jpg`;
   imgRambut.src = `assets/rambut-${faceShape}.jpg`;
 }
 
 // BMI
 function hitungBMI() {
-  const bb = +bb.value;
-  const tb = tb.value / 100;
-  const bmi = bb / (tb * tb);
+  const w = +bb.value;
+  const h = tb.value/100;
+  bmi = w/(h*h);
 
-  if (bmi < 18.5) {
-    bmiCategory = 'kurus';
-    bmiTips.innerText = 'Fokus pada surplus kalori dan angkat beban';
-  } else if (bmi < 25) {
-    bmiCategory = 'normal';
-    bmiTips.innerText = 'Pertahankan pola makan seimbang dan olahraga rutin';
+  if(bmi<18.5){
+    bmiStatus='Underweight';
+    bmiCategory='kurus';
+    bmiTips.innerText='Bulking: fokus surplus kalori & angkat beban';
+  } else if(bmi<25){
+    bmiStatus='Normal';
+    bmiCategory='normal';
+    bmiTips.innerText='Pertahankan pola hidup seimbang';
   } else {
-    bmiCategory = 'gemuk';
-    bmiTips.innerText = 'Fokus pada defisit kalori dan olahraga kardio';
+    bmiStatus='Overweight';
+    bmiCategory='gemuk';
+    bmiTips.innerText='Cardio & defisit kalori';
   }
 
-  bmiResult.innerText = `BMI kamu: ${bmi.toFixed(1)}`;
+  bmiResult.innerText=`BMI: ${bmi.toFixed(1)} (${bmiStatus})`;
 
-  mealTable.innerHTML = `
+  mealTable.innerHTML=`
     <table>
       <tr><th>Waktu</th><th>Menu</th></tr>
-      <tr><td>Pagi</td><td>Omelet sayur + roti gandum + susu</td></tr>
-      <tr><td>Siang</td><td>Nasi + ayam panggang + sayur</td></tr>
+      <tr><td>Pagi</td><td>Nasi uduk + telur + teh</td></tr>
+      <tr><td>Siang</td><td>Nasi + ayam + sayur</td></tr>
       <tr><td>Sore</td><td>Buah + yoghurt</td></tr>
-      <tr><td>Malam</td><td>Sup + tahu/tempe</td></tr>
+      <tr><td>Malam</td><td>Sup + tempe</td></tr>
     </table>
   `;
 }
 
 // JOURNAL
-function renderJournal() {
-  dateNow.innerText = new Date().toLocaleDateString('id-ID',{
+function renderJournal(){
+  dateNow.innerText=new Date().toLocaleDateString('id-ID',{
     weekday:'long',day:'numeric',month:'long',year:'numeric'
   });
 
-  journalContent.innerHTML = `
+  journalContent.innerHTML=`
     <p>Skintone: ${skinTone}</p>
+    ${palette.map(c=>`<div style="width:30px;height:30px;background:${c};display:inline-block"></div>`).join('')}
     <p>Bentuk Wajah: ${faceShape}</p>
-    <img src="assets/hijab-${faceShape}.jpg"><br>
-    <small>Hasil Rekomendasi Hijab kamu</small><br>
-
-    <img src="assets/rambut-${faceShape}.jpg"><br>
-    <small>Hasil Rekomendasi Rambut kamu</small><br>
-
-    <img src="assets/ootd-${bmiCategory}.jpg"><br>
-    <small>👩 OOTD Collection</small>
+    <img src="assets/hijab-${faceShape}.jpg"><p>Gaya Hijab yang Disarankan</p>
+    <img src="assets/rambut-${faceShape}.jpg"><p>Gaya Rambut yang Disarankan</p>
+    <p>BMI: ${bmi.toFixed(1)} (${bmiStatus})</p>
+    <img src="assets/ootd-${bmiCategory}.jpg"><p>👩 OOTD Collection</p>
   `;
+}
+
+// PDF
+function savePDF(){
+  html2pdf().set({
+    filename:`AuraFit-Journal-${Date.now()}.pdf`,
+    html2canvas:{scale:2},
+    jsPDF:{format:'a4'}
+  }).from(document.getElementById('journal')).save();
 }
