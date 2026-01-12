@@ -16,9 +16,17 @@
 <body>
 
 <!-- DASHBOARD -->
-<section id="dashboard" class="page show center">
-  <h1>AuraFit</h1>
-  <button onclick="goTo('skintone')">Mulai</button>
+<section id="dashboard" class="page show dashboard">
+  <div class="flower pink"></div>
+  <div class="flower blue"></div>
+
+  <div class="dash-content">
+    <h1>🌸 AuraFit: Temukan Pesonamu</h1>
+    <p class="subtitle">
+      Tunjukkan sinarmu hari ini dengan gaya yang paling tepat untuk dirimu.
+    </p>
+    <button class="btn-start" onclick="goTo('skintone')">Mulai</button>
+  </div>
 </section>
 
 <!-- SKINTONE -->
@@ -87,7 +95,6 @@
 <section id="ootd" class="page center">
   <h2>Rekomendasi OOTD Sesuai BMI Kamu</h2>
   <img id="imgOOTD" class="ootd">
-
   <div class="nav">
     <button onclick="goTo('bmi')">Kembali</button>
     <button onclick="goTo('journal')">Selanjutnya</button>
