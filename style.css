@@ -179,3 +179,54 @@ td, th {
     bottom: -100px;
     left: -100px;
 }
+
+.dashboard {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+
+  /* KUNCI CENTER */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #fdeff9, #eaf6ff);
+}
+
+.dash-content {
+  position: relative;
+  z-index: 2;
+
+  /* CENTER ABSOLUT */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  width: 100%;
+  max-width: 500px;   /* 🔥 PENTING */
+  padding: 20px;
+}
+
+.flower {
+  position: absolute;
+  pointer-events: none;   /* 🔥 supaya tidak ganggu layout */
+  transform: translateZ(0);
+}
+
+@media (max-width: 768px) {
+  .dashboard h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .btn-start {
+    width: 80%;
+    max-width: 260px;
+  }
+}
