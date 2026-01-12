@@ -72,3 +72,73 @@ td, th {
   border: 1px solid #999;
   padding: 8px;
 }
+/* DASHBOARD */
+.dashboard {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fdeff9, #eaf6ff);
+}
+
+.dash-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+  z-index: 2;
+}
+
+.dashboard h1 {
+  font-size: 2.2rem;
+}
+
+.subtitle {
+  max-width: 320px;
+  font-size: 1rem;
+  margin: 15px 0 30px;
+}
+
+/* BUTTON */
+.btn-start {
+  padding: 18px 45px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  background: #f472b6;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-start:hover {
+  background: #ec4899;
+  transform: scale(1.05);
+}
+
+/* FLOWER DECOR */
+.flower {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  opacity: 0.25;
+  animation: float 6s ease-in-out infinite;
+}
+
+.flower.pink {
+  background: radial-gradient(circle, #f9a8d4, transparent);
+  top: 10%;
+  left: 5%;
+}
+
+.flower.blue {
+  background: radial-gradient(circle, #93c5fd, transparent);
+  bottom: 10%;
+  right: 5%;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
