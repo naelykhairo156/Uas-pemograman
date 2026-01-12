@@ -142,3 +142,8 @@ td, th {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-15px); }
 }
+
+.ootd {
+  width: 80%;
+  max-width: 360px;
+}
