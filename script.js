@@ -10,6 +10,8 @@ function goTo(id) {
   document.getElementById(current).style.display = 'none';
   document.getElementById(id).style.display = 'flex';
   current = id;
+
+  if (id === 'ootd') renderOOTD();
   if (id === 'journal') renderJournal();
 }
 
@@ -121,4 +123,9 @@ function savePDF(){
     html2canvas:{scale:2},
     jsPDF:{format:'a4'}
   }).from(document.getElementById('journal')).save();
+}
+
+function renderOOTD() {
+  const img = document.getElementById('imgOOTD');
+  img.src = `assets/ootd-${bmiCategory}.jpg`;
 }
