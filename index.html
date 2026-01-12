@@ -6,24 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Journal Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+
+  <!-- PDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- DASHBOARD -->
-<section id="dashboard" class="page show center-page">
-  <div class="dashboard-box">
-    <h1>AuraFit</h1>
-    <p>Personalized beauty & health advisor</p>
-    <button onclick="goTo('skintone')">Mulai</button>
-  </div>
+<section id="dashboard" class="page show center">
+  <h1>AuraFit</h1>
+  <button onclick="goTo('skintone')">Mulai</button>
 </section>
 
 <!-- SKINTONE -->
-<section id="skintone" class="page">
-  <h2>Skintone Analysis</h2>
+<section id="skintone" class="page center">
+  <h2>Skintone Scanner</h2>
 
   <video id="videoSkin" autoplay></video>
   <canvas id="canvasSkin"></canvas>
@@ -34,11 +34,14 @@
 
   <div id="skinResult"></div>
 
-  <button onclick="goTo('face')">Selanjutnya</button>
+  <div class="nav">
+    <button onclick="goTo('dashboard')">Kembali</button>
+    <button onclick="goTo('face')">Selanjutnya</button>
+  </div>
 </section>
 
 <!-- FACE -->
-<section id="face" class="page">
+<section id="face" class="page center">
   <h2>Face Framing</h2>
 
   <video id="videoFace" autoplay></video>
@@ -47,26 +50,26 @@
   <button onclick="startCamera('face')">Aktifkan Kamera</button>
   <button onclick="scanFace()">Scan Wajah</button>
 
-  <div class="center-col">
-    <h4>Ini style hijab yang cocok untuk mu</h4>
-    <img id="imgHijab">
+  <p id="faceText"></p>
 
-    <h4>Ini style rambut yang cocok untuk mu</h4>
-    <img id="imgRambut">
+  <h4>Ini style hijab yang cocok untuk mu</h4>
+  <img id="imgHijab">
+
+  <h4>Ini style rambut yang cocok untuk mu</h4>
+  <img id="imgRambut">
+
+  <div class="nav">
+    <button onclick="goTo('skintone')">Kembali</button>
+    <button onclick="goTo('bmi')">Selanjutnya</button>
   </div>
-
-  <button onclick="goTo('bmi')">Selanjutnya</button>
 </section>
 
 <!-- BMI -->
-<section id="bmi" class="page">
+<section id="bmi" class="page center">
   <h2>BMI & Health</h2>
 
-  <div class="bmi-input">
-    <input type="number" id="bb" placeholder="Berat (kg)">
-    <input type="number" id="tb" placeholder="Tinggi (cm)">
-  </div>
-
+  <input id="bb" type="number" placeholder="Berat (kg)">
+  <input id="tb" type="number" placeholder="Tinggi (cm)">
   <button onclick="hitungBMI()">Hitung</button>
 
   <p id="bmiResult"></p>
@@ -74,22 +77,35 @@
 
   <div id="mealTable"></div>
 
-  <button onclick="goTo('ootd')">Selanjutnya</button>
+  <div class="nav">
+    <button onclick="goTo('face')">Kembali</button>
+    <button onclick="goTo('ootd')">Selanjutnya</button>
+  </div>
 </section>
 
 <!-- OOTD -->
-<section id="ootd" class="page">
+<section id="ootd" class="page center">
   <h2>Rekomendasi OOTD Sesuai BMI Kamu</h2>
-  <img id="imgOOTD" class="ootd-img">
-  <button onclick="goTo('journal')">Lihat Jurnal</button>
+  <img id="imgOOTD" class="ootd">
+
+  <div class="nav">
+    <button onclick="goTo('bmi')">Kembali</button>
+    <button onclick="goTo('journal')">Selanjutnya</button>
+  </div>
 </section>
 
 <!-- JOURNAL -->
-<section id="journal" class="page journal">
+<section id="journal" class="page journal center">
   <h2>✨ AuraFit Journal ✨</h2>
   <p id="dateNow"></p>
 
   <div id="journalContent"></div>
+
+  <button onclick="savePDF()">Cetak / Simpan Jurnal</button>
+
+  <div class="nav">
+    <button onclick="goTo('ootd')">Kembali</button>
+  </div>
 </section>
 
 <script src="script.js"></script>
