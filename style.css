@@ -1,106 +1,74 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #fdeff9, #e8f4ff);
-  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#fdeff9,#eaf6ff);
+  font-family: Arial, sans-serif;
 }
 
 .page {
   display: none;
   min-height: 100vh;
-  padding: 30px;
+  padding: 25px;
+}
+
+.show { display: flex; }
+
+.center {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
-.show {
-  display: block;
-}
-
-.center-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.dashboard-box h1 {
-  font-size: 3rem;
-}
-
 button {
-  padding: 12px 28px;
-  border-radius: 25px;
+  padding: 12px 25px;
+  border-radius: 20px;
   border: none;
-  background: #f7b2d9;
-  cursor: pointer;
-  margin-top: 15px;
+  background: #f6b6d8;
+  margin: 8px;
 }
 
 video, canvas {
-  width: 280px;
+  width: 260px;
   border-radius: 15px;
-  margin: 10px auto;
-  display: block;
 }
 
-.center-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.center-col img {
-  width: 180px;
+img {
+  width: 200px;
   border-radius: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-.bmi-input {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+.ootd {
+  width: 85%;
+  max-width: 350px;
 }
 
-.bmi-input input {
-  width: 140px;
-  padding: 10px;
-}
-
-table {
-  width: 100%;
-  max-width: 500px;
-  margin: 15px auto;
-  border-collapse: collapse;
-}
-
-td, th {
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-
-.ootd-img {
-  width: 250px;
-  margin: 20px auto;
-  display: block;
-}
-
-.journal {
-  font-family: 'Caveat', cursive;
-}
-
-.journal img {
-  width: 120px;
-  margin: 10px;
+.nav {
+  margin-top: 20px;
 }
 
 .error {
   color: red;
+  font-weight: bold;
 }
 
-@media (max-width: 600px) {
-  .bmi-input {
-    flex-direction: column;
-  }
+.journal {
+  font-family: 'Indie Flower', cursive;
+}
+
+.journal img {
+  width: 120px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 500px;
+}
+
+td, th {
+  border: 1px solid #999;
+  padding: 8px;
 }
